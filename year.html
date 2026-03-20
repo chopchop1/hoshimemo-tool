@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今年のテーマ診断 | みずきの星メモ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #0d0f1a; color: #e8e4dc; min-height: 100vh; padding: 2.5rem 1rem; position: relative; overflow-x: hidden; }
+.stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--op); } }
+.wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+.logo { text-align: center; margin-bottom: 2.5rem; }
+.logo-mark { width: 48px; height: 48px; margin: 0 auto 0.75rem; }
+.logo h1 { font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #a89fc0; }
+.card-main { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem 1.75rem; }
+.card-header { text-align: center; margin-bottom: 2rem; }
+.card-header h2 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.05em; color: #e8e4dc; margin-bottom: 0.75rem; }
+.card-header p { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.divider { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #6b5fa0, transparent); margin: 1.25rem auto; }
+.form-group { margin-bottom: 1.25rem; }
+label { display: block; font-size: 12px; letter-spacing: 0.1em; color: #8a8499; margin-bottom: 8px; }
+input[type="date"] { width: 100%; padding: 12px 14px; font-size: 15px; font-family: 'Noto Sans JP', sans-serif; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #e8e4dc; outline: none; transition: border-color 0.2s; color-scheme: dark; }
+input[type="date"]:focus { border-color: rgba(107,95,160,0.6); }
+.btn-main { width: 100%; padding: 14px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.15em; border: 1px solid rgba(107,95,160,0.5); border-radius: 10px; background: rgba(107,95,160,0.2); color: #c4b8e8; cursor: pointer; margin-top: 0.5rem; transition: all 0.2s; }
+.btn-main:hover { background: rgba(107,95,160,0.35); border-color: rgba(107,95,160,0.8); color: #e0d8f5; }
+.result { display: none; margin-top: 2rem; }
+.result-header { text-align: center; margin-bottom: 1.5rem; }
+.result-header p { font-size: 11px; letter-spacing: 0.2em; color: #6b5fa0; }
+.result-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; position: relative; overflow: hidden; }
+.result-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.result-card.jupiter::before { background: linear-gradient(180deg, #8ec4a8, #4a9070); }
+.result-card.saturn::before { background: linear-gradient(180deg, #c8a040, #8a6010); }
+.result-card.overall::before { background: linear-gradient(180deg, #c4b8e8, #6b5fa0); }
+.card-label { font-size: 11px; letter-spacing: 0.12em; margin-bottom: 8px; color: #4a9070; }
+.card-label.saturn { color: #c8a040; }
+.card-label.overall { color: #8a7fb8; }
+.card-name { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; color: #e8e4dc; margin-bottom: 8px; }
+.card-desc { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.cta-card { margin-top: 1.5rem; padding: 1.5rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; text-align: center; }
+.cta-card p { font-size: 13px; color: #8a8499; line-height: 1.9; margin-bottom: 1.25rem; }
+.cta-card a { display: inline-block; padding: 10px 28px; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; background: rgba(107,95,160,0.25); border: 1px solid rgba(107,95,160,0.5); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; }
+.cta-card a:hover { background: rgba(107,95,160,0.4); color: #e0d8f5; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 0.75rem; padding: 11px 28px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.08em; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.share-btn:hover { background: rgba(255,255,255,0.1); color: #e0d8f5; }
+.share-icon { width: 14px; height: 14px; fill: currentColor; }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: #3a3650; letter-spacing: 0.1em; }
+.footer a { color: #3a3650; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#6b5fa0" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="24" cy="24" r="13" stroke="#6b5fa0" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="24" cy="24" r="2.5" fill="#a89fc0"/>
+      <line x1="24" y1="4" x2="24" y2="44" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <line x1="4" y1="24" x2="44" y2="24" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="24" cy="4" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="4" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="44" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+    </svg>
+    <h1>みずきの星メモ</h1>
+  </div>
+  <div class="card-main">
+    <div class="card-header">
+      <h2>2026年 あなたのテーマ診断</h2>
+      <div class="divider"></div>
+      <p>生年月日から木星・土星のトランジットを読み解き、<br>今年あなたに訪れる心理的テーマをお伝えします。</p>
+    </div>
+    <div class="form-group">
+      <label>生年月日</label>
+      <input type="date" id="birthdate" max="2010-12-31" min="1940-01-01" />
+    </div>
+    <button class="btn-main" onclick="diagnose()">今年のテーマを見る</button>
+    <div class="result" id="result">
+      <div class="result-header" style="margin-top:1.75rem;">
+        <div class="divider"></div>
+        <p>2026年 あなたへのメッセージ</p>
+      </div>
+      <div class="result-card jupiter">
+        <div class="card-label">♃ 木星が示す拡大のテーマ</div>
+        <div class="card-name" id="jupiter-theme"></div>
+        <div class="card-desc" id="jupiter-desc"></div>
+      </div>
+      <div class="result-card saturn">
+        <div class="card-label saturn">♄ 土星が示す試練のテーマ</div>
+        <div class="card-name" id="saturn-theme"></div>
+        <div class="card-desc" id="saturn-desc"></div>
+      </div>
+      <div class="result-card overall">
+        <div class="card-label overall">2026年 全体のメッセージ</div>
+        <div class="card-desc" id="overall-desc"></div>
+      </div>
+      <div class="cta-card">
+        <p>トランジットの読み解き方をさらに深く知りたい方へ。<br>みずきの星メモで詳しく解説しています。</p>
+        <a href="https://note.com/hoshimemo" target="_blank">マガジンを読む →</a>
+        <a class="share-btn" id="share-btn" href="#" target="_blank">
+          <svg class="share-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Xでシェアする
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><a href="https://note.com/hoshimemo">みずきの星メモ</a></div>
+</div>
+<script>
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${3+Math.random()*4}s;--delay:${-Math.random()*6}s;--op:${0.3+Math.random()*0.6};`;
+    container.appendChild(s);
+  }
+})();
+
+function getSunSign(month, day) {
+  const signs = [
+    { name: '山羊座', sm:12, sd:22, em:1,  ed:19 },
+    { name: '水瓶座', sm:1,  sd:20, em:2,  ed:18 },
+    { name: '魚座',   sm:2,  sd:19, em:3,  ed:20 },
+    { name: '牡羊座', sm:3,  sd:21, em:4,  ed:19 },
+    { name: '牡牛座', sm:4,  sd:20, em:5,  ed:20 },
+    { name: '双子座', sm:5,  sd:21, em:6,  ed:20 },
+    { name: '蟹座',   sm:6,  sd:21, em:7,  ed:22 },
+    { name: '獅子座', sm:7,  sd:23, em:8,  ed:22 },
+    { name: '乙女座', sm:8,  sd:23, em:9,  ed:22 },
+    { name: '天秤座', sm:9,  sd:23, em:10, ed:22 },
+    { name: '蠍座',   sm:10, sd:23, em:11, ed:21 },
+    { name: '射手座', sm:11, sd:22, em:12, ed:21 },
+  ];
+  for (const s of signs) {
+    if ((month === s.sm && day >= s.sd) || (month === s.em && day <= s.ed)) return s.name;
+  }
+  return '山羊座';
+}
+
+const jupiterThemes = {
+  '牡羊座': { theme: '自己発信・行動・新規開拓', desc: '2026年、あなたの「自分らしく動く」というエネルギーが拡大します。新しいことを始めることへの追い風が吹いています。' },
+  '牡牛座': { theme: '価値・豊かさ・自己肯定', desc: '自分の価値や豊かさのテーマが広がります。「自分には価値がある」という感覚を育てることが、今年の大きなテーマです。' },
+  '双子座': { theme: '知識・コミュニケーション・多様性', desc: '学ぶこと、伝えること、繋がることへの拡大が起きます。好奇心の向くままに動くことが、今年の幸運を引き寄せます。' },
+  '蟹座': { theme: '家族・感情・安心の基盤', desc: '家族や自分の内側、「安心できる場所」というテーマが広がります。感情を大切にすることが、今年の豊かさに繋がります。' },
+  '獅子座': { theme: '自己表現・創造・喜び', desc: '自分を表現することへの大きな追い風が吹いています。楽しむことを許すことが、今年の成長の鍵です。' },
+  '乙女座': { theme: '健康・日常・改善', desc: '日常の習慣や健康、仕事のやり方を見直すことで大きな成果が生まれます。小さな改善の積み重ねが今年の豊かさに。' },
+  '天秤座': { theme: '関係性・対話・調和', desc: 'パートナーシップや人間関係が広がります。誰かと一緒に何かを作ること、対話を深めることが今年のテーマです。' },
+  '蠍座': { theme: '変容・深化・再生', desc: '深い変容のエネルギーが働きます。手放すことで、より本質的なものが手に入る一年です。' },
+  '射手座': { theme: '探求・学び・信念', desc: '遠くのものへの憧れ、哲学的な探求、学びへの拡大が起きます。信じる方向に大きく踏み出せる年です。' },
+  '山羊座': { theme: '達成・社会・キャリア', desc: '社会的な達成や責任のテーマが広がります。努力が実りやすい一年。長期的な目標に向けて動くのに良い時期です。' },
+  '水瓶座': { theme: 'コミュニティ・革新・未来', desc: '仲間とのつながりや、社会への貢献というテーマが広がります。独自のビジョンを持って動くことが今年の鍵です。' },
+  '魚座': { theme: '感受性・創造・スピリチュアリティ', desc: '感受性と創造力が高まります。直感を信じて動くことで、思いがけない豊かさが生まれる一年です。' },
+};
+
+const saturnThemes = {
+  '牡羊座': { theme: '自己確立・行動への責任', desc: '「自分らしく動く」ことへの試練があります。衝動的な行動ではなく、責任ある行動を問われる一年です。' },
+  '牡牛座': { theme: '安定・価値観の再構築', desc: '「本当に大切なものは何か」を問われます。物質的・精神的な価値観を見直す試練がある一年です。' },
+  '双子座': { theme: '言葉・思考の深化', desc: '表面的な情報ではなく、深く理解することを求められます。言葉の責任を問われる一年です。' },
+  '蟹座': { theme: '感情・家族との向き合い', desc: '感情や家族との関係に真剣に向き合うことを求められます。感情を抑圧せず、丁寧に扱う練習の一年です。' },
+  '獅子座': { theme: '承認への依存からの自立', desc: '他者からの承認に頼りすぎていないかを問われます。自分で自分を認める力を育てることが試練のテーマです。' },
+  '乙女座': { theme: '完璧主義・自己批判との和解', desc: '「完璧でなくてもいい」ということを学ぶ試練があります。自己批判のパターンに気づき、手放す一年です。' },
+  '天秤座': { theme: '関係性の再構築', desc: '人間関係のあり方を問われます。依存でも孤立でもない、健全な関係性を築くことが試練のテーマです。' },
+  '蠍座': { theme: '執着・コントロールへの手放し', desc: '深い執着やコントロール欲求に向き合う試練があります。信頼と手放しを学ぶ一年です。' },
+  '射手座': { theme: '自由・無責任との向き合い', desc: '自由を求めるあまり、責任から逃げていないかを問われます。自由と責任を両立させる試練の一年です。' },
+  '山羊座': { theme: '達成への強迫・休息の許可', desc: '「もっと結果を出さなければ」という強迫的な感覚に向き合います。休むことを自分に許す練習の一年です。' },
+  '水瓶座': { theme: '孤立・独自性の統合', desc: '「自分だけ違う」という孤立感に向き合います。独自性を持ちながらも、人と繋がる力を育てる試練の一年です。' },
+  '魚座': { theme: '境界線・自己溶解への対処', desc: '自分と他者の境界線を意識することを求められます。共感しながらも自分を失わない力を育てる一年です。' },
+};
+
+function diagnose() {
+  const val = document.getElementById('birthdate').value;
+  if (!val) { alert('生年月日を入力してください'); return; }
+  const date = new Date(val);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const sun = getSunSign(month, day);
+  const jupiter = jupiterThemes[sun];
+  const saturn = saturnThemes[sun];
+  const overall = `2026年、あなたには「${jupiter.theme}」という拡大のテーマと、「${saturn.theme}」という試練のテーマが同時に訪れています。木星の恩恵を受けながら、土星の問いにも誠実に向き合うことで、この一年が深い成長の時間になるでしょう。`;
+
+  document.getElementById('jupiter-theme').textContent = jupiter.theme;
+  document.getElementById('jupiter-desc').textContent = jupiter.desc;
+  document.getElementById('saturn-theme').textContent = saturn.theme;
+  document.getElementById('saturn-desc').textContent = saturn.desc;
+  document.getElementById('overall-desc').textContent = overall;
+
+  const shareText = `私の2026年のテーマ診断。\n\n木星：「${jupiter.theme}」\n土星：「${saturn.theme}」\n\nあなたの今年のテーマも調べてみてください。\n👉 https://chopchop1.github.io/hoshimemo-tool/year/\n#心理占星術 #みずきの星メモ #2026年`;
+  document.getElementById('share-btn').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
+
+  const result = document.getElementById('result');
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

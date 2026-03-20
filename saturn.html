@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>土星コンプレックス診断 | みずきの星メモ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #0d0f1a; color: #e8e4dc; min-height: 100vh; padding: 2.5rem 1rem; position: relative; overflow-x: hidden; }
+.stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--op); } }
+.wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+.logo { text-align: center; margin-bottom: 2.5rem; }
+.logo-mark { width: 48px; height: 48px; margin: 0 auto 0.75rem; }
+.logo h1 { font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #a89fc0; }
+.card-main { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem 1.75rem; }
+.card-header { text-align: center; margin-bottom: 2rem; }
+.card-header h2 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.05em; color: #e8e4dc; margin-bottom: 0.75rem; }
+.card-header p { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.divider { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #6b5fa0, transparent); margin: 1.25rem auto; }
+.form-group { margin-bottom: 1.25rem; }
+label { display: block; font-size: 12px; letter-spacing: 0.1em; color: #8a8499; margin-bottom: 8px; }
+input[type="date"] { width: 100%; padding: 12px 14px; font-size: 15px; font-family: 'Noto Sans JP', sans-serif; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #e8e4dc; outline: none; transition: border-color 0.2s; color-scheme: dark; }
+input[type="date"]:focus { border-color: rgba(107,95,160,0.6); }
+.btn-main { width: 100%; padding: 14px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.15em; border: 1px solid rgba(107,95,160,0.5); border-radius: 10px; background: rgba(107,95,160,0.2); color: #c4b8e8; cursor: pointer; margin-top: 0.5rem; transition: all 0.2s; }
+.btn-main:hover { background: rgba(107,95,160,0.35); border-color: rgba(107,95,160,0.8); color: #e0d8f5; }
+.result { display: none; margin-top: 2rem; }
+.result-header { text-align: center; margin-bottom: 1.5rem; }
+.result-header p { font-size: 11px; letter-spacing: 0.2em; color: #6b5fa0; }
+.result-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; position: relative; overflow: hidden; }
+.result-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.result-card.saturn::before { background: linear-gradient(180deg, #c8a040, #8a6010); }
+.result-card.complex::before { background: linear-gradient(180deg, #c4a8e8, #8060c0); }
+.result-card.gift::before { background: linear-gradient(180deg, #8ec4a8, #4a9070); }
+.card-label { font-size: 11px; letter-spacing: 0.12em; margin-bottom: 8px; }
+.card-label.saturn { color: #c8a040; }
+.card-label.complex { color: #8060c0; }
+.card-label.gift { color: #4a9070; }
+.card-name { font-family: 'Noto Serif JP', serif; font-size: 22px; font-weight: 400; color: #e8e4dc; margin-bottom: 8px; }
+.card-desc { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.cta-card { margin-top: 1.5rem; padding: 1.5rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; text-align: center; }
+.cta-card p { font-size: 13px; color: #8a8499; line-height: 1.9; margin-bottom: 1.25rem; }
+.cta-card a { display: inline-block; padding: 10px 28px; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; background: rgba(107,95,160,0.25); border: 1px solid rgba(107,95,160,0.5); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; }
+.cta-card a:hover { background: rgba(107,95,160,0.4); color: #e0d8f5; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 0.75rem; padding: 11px 28px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.08em; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.share-btn:hover { background: rgba(255,255,255,0.1); color: #e0d8f5; }
+.share-icon { width: 14px; height: 14px; fill: currentColor; }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: #3a3650; letter-spacing: 0.1em; }
+.footer a { color: #3a3650; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#6b5fa0" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="24" cy="24" r="13" stroke="#6b5fa0" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="24" cy="24" r="2.5" fill="#a89fc0"/>
+      <line x1="24" y1="4" x2="24" y2="44" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <line x1="4" y1="24" x2="44" y2="24" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="24" cy="4" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="4" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="44" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+    </svg>
+    <h1>みずきの星メモ</h1>
+  </div>
+  <div class="card-main">
+    <div class="card-header">
+      <h2>土星コンプレックス診断</h2>
+      <div class="divider"></div>
+      <p>生年月日から土星星座を算出し、<br>あなたが抱えやすいコンプレックスのテーマをお伝えします。</p>
+    </div>
+    <div class="form-group">
+      <label>生年月日</label>
+      <input type="date" id="birthdate" max="2010-12-31" min="1940-01-01" />
+    </div>
+    <button class="btn-main" onclick="diagnose()">診断する</button>
+    <div class="result" id="result">
+      <div class="result-header" style="margin-top:1.75rem;">
+        <div class="divider"></div>
+        <p>あなたの土星テーマ</p>
+      </div>
+      <div class="result-card saturn">
+        <div class="card-label saturn">♄ 土星星座</div>
+        <div class="card-name" id="saturn-sign"></div>
+        <div class="card-desc" id="saturn-desc"></div>
+      </div>
+      <div class="result-card complex">
+        <div class="card-label complex">抱えやすいコンプレックス</div>
+        <div class="card-desc" id="complex-desc"></div>
+      </div>
+      <div class="result-card gift">
+        <div class="card-label gift">土星が育てる力</div>
+        <div class="card-desc" id="gift-desc"></div>
+      </div>
+      <div class="cta-card">
+        <p>土星コンプレックスをさらに深く知りたい方へ。<br>みずきの星メモで詳しく解説しています。</p>
+        <a href="https://note.com/hoshimemo" target="_blank">マガジンを読む →</a>
+        <a class="share-btn" id="share-btn" href="#" target="_blank">
+          <svg class="share-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Xでシェアする
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><a href="https://note.com/hoshimemo">みずきの星メモ</a></div>
+</div>
+<script>
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${3+Math.random()*4}s;--delay:${-Math.random()*6}s;--op:${0.3+Math.random()*0.6};`;
+    container.appendChild(s);
+  }
+})();
+
+const saturnData = {
+  '牡羊座': { desc: '自己主張・行動力・リーダーシップのテーマで試練を受けます。', complex: '「自分が前に出ることへの罪悪感」や「行動することへの恐れ」を抱えやすい傾向があります。自己主張すると怒られるという体験が積み重なっていることも。', gift: '試練を乗り越えることで、本物のリーダーシップと、行動する勇気が育ちます。' },
+  '牡牛座': { desc: '安定・お金・自己価値のテーマで試練を受けます。', complex: '「自分には価値がない」「お金や豊かさを受け取る資格がない」という感覚を抱えやすい傾向があります。', gift: '地に足のついた自己価値感と、本物の豊かさを築く力が育ちます。' },
+  '双子座': { desc: '知識・コミュニケーション・学習のテーマで試練を受けます。', complex: '「自分の言葉には価値がない」「うまく伝えられない」という不安を抱えやすい傾向があります。', gift: '深い思考力と、言葉の力を丁寧に使う能力が育ちます。' },
+  '蟹座': { desc: '家族・感情・安心感のテーマで試練を受けます。', complex: '「感情を出してはいけない」「甘えてはいけない」という抑圧を抱えやすい傾向があります。', gift: '感情と向き合う深さと、本当の意味での安心感を自分で作る力が育ちます。' },
+  '獅子座': { desc: '自己表現・創造性・承認のテーマで試練を受けます。', complex: '「自分を表現することへの恥」や「目立ってはいけない」という抑圧を抱えやすい傾向があります。', gift: '試練を経て、本物の自信と、他者の承認に依存しない自己表現の力が育ちます。' },
+  '乙女座': { desc: '完璧主義・分析・奉仕のテーマで試練を受けます。', complex: '「完璧でないと価値がない」「もっとできるはず」という自己批判を抱えやすい傾向があります。', gift: '細部への注意力と、不完全な自分を受け入れる成熟した視点が育ちます。' },
+  '天秤座': { desc: '対人関係・調和・公平さのテーマで試練を受けます。', complex: '「誰かに嫌われるかもしれない」という恐れや、自分の意見を言えないことへの葛藤を抱えやすい傾向があります。', gift: '真の調和と、自分の意見を持ちながら関係を築く外交力が育ちます。' },
+  '蠍座': { desc: '変容・権力・深層心理のテーマで試練を受けます。', complex: '「信頼したら裏切られる」という恐れや、感情のコントロールへの強いこだわりを抱えやすい傾向があります。', gift: '深い洞察力と、変容を恐れない心理的な強さが育ちます。' },
+  '射手座': { desc: '信念・自由・高等教育のテーマで試練を受けます。', complex: '「自分の信じることを表現してはいけない」という抑圧や、自由への過度な執着を抱えやすい傾向があります。', gift: '本物の哲学と、自由と責任を両立させる成熟した視点が育ちます。' },
+  '山羊座': { desc: '責任・社会的達成・権威のテーマで試練を受けます。', complex: '「もっと結果を出さなければ」という強迫的な達成欲や、権威への複雑な感情を抱えやすい傾向があります。', gift: '本物のリーダーシップと、地に足のついた社会的な影響力が育ちます。' },
+  '水瓶座': { desc: '独自性・改革・コミュニティのテーマで試練を受けます。', complex: '「自分は変わり者だ」という孤立感や、「群れに馴染めない」という疎外感を抱えやすい傾向があります。', gift: '本物の独自性と、社会に貢献する革新的なビジョンが育ちます。' },
+  '魚座': { desc: '共感・境界線・スピリチュアリティのテーマで試練を受けます。', complex: '「現実から逃げたい」という感覚や、自分と他者の境界線の曖昧さに苦しむ傾向があります。', gift: '深い共感力と、現実と理想をつなぐ創造的な力が育ちます。' },
+};
+
+function getSaturnSign(birthYear) {
+  const saturnCycle = [
+    [1929, 1932, '山羊座'], [1932, 1935, '水瓶座'], [1935, 1937, '魚座'],
+    [1937, 1940, '牡羊座'], [1940, 1942, '牡牛座'], [1942, 1944, '双子座'],
+    [1944, 1946, '蟹座'],   [1946, 1949, '獅子座'], [1949, 1951, '乙女座'],
+    [1951, 1953, '天秤座'], [1953, 1956, '蠍座'],   [1956, 1959, '射手座'],
+    [1959, 1962, '山羊座'], [1962, 1964, '水瓶座'], [1964, 1967, '魚座'],
+    [1967, 1969, '牡羊座'], [1969, 1972, '牡牛座'], [1972, 1973, '双子座'],
+    [1973, 1976, '蟹座'],   [1976, 1977, '獅子座'], [1977, 1980, '乙女座'],
+    [1980, 1983, '天秤座'], [1983, 1985, '蠍座'],   [1985, 1988, '射手座'],
+    [1988, 1991, '山羊座'], [1991, 1994, '水瓶座'], [1994, 1996, '魚座'],
+    [1996, 1999, '牡羊座'], [1999, 2000, '牡牛座'], [2000, 2003, '双子座'],
+    [2003, 2005, '蟹座'],   [2005, 2007, '獅子座'], [2007, 2010, '乙女座'],
+    [2010, 2012, '天秤座'], [2012, 2015, '蠍座'],   [2015, 2017, '射手座'],
+    [2017, 2020, '山羊座'], [2020, 2023, '水瓶座'], [2023, 2026, '魚座'],
+  ];
+  for (const [start, end, sign] of saturnCycle) {
+    if (birthYear >= start && birthYear < end) return sign;
+  }
+  return '山羊座';
+}
+
+function diagnose() {
+  const val = document.getElementById('birthdate').value;
+  if (!val) { alert('生年月日を入力してください'); return; }
+  const date = new Date(val);
+  const year = date.getFullYear();
+  const saturn = getSaturnSign(year);
+  const data = saturnData[saturn];
+
+  document.getElementById('saturn-sign').textContent = saturn;
+  document.getElementById('saturn-desc').textContent = data.desc;
+  document.getElementById('complex-desc').textContent = data.complex;
+  document.getElementById('gift-desc').textContent = data.gift;
+
+  const shareText = `私の土星星座は${saturn}。\n\n抱えやすいコンプレックスは「${data.complex.slice(0, 25)}...」\n\nでも土星はそこに「${data.gift.slice(0, 20)}...」という力も育てます。\n\nあなたの土星星座、調べてみてください。\n👉 https://chopchop1.github.io/hoshimemo-tool/saturn/\n#心理占星術 #みずきの星メモ`;
+  document.getElementById('share-btn').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
+
+  const result = document.getElementById('result');
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

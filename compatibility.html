@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心理占星術 相性診断 | みずきの星メモ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #0d0f1a; color: #e8e4dc; min-height: 100vh; padding: 2.5rem 1rem; position: relative; overflow-x: hidden; }
+.stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--op); } }
+.wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+.logo { text-align: center; margin-bottom: 2.5rem; }
+.logo-mark { width: 48px; height: 48px; margin: 0 auto 0.75rem; }
+.logo h1 { font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #a89fc0; }
+.card-main { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem 1.75rem; }
+.card-header { text-align: center; margin-bottom: 2rem; }
+.card-header h2 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.05em; color: #e8e4dc; margin-bottom: 0.75rem; }
+.card-header p { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.divider { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #6b5fa0, transparent); margin: 1.25rem auto; }
+.person-group { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.person-label { font-size: 12px; letter-spacing: 0.1em; color: #6b5fa0; margin-bottom: 0.75rem; }
+.form-group { margin-bottom: 0.75rem; }
+label { display: block; font-size: 11px; letter-spacing: 0.1em; color: #8a8499; margin-bottom: 6px; }
+input[type="date"] { width: 100%; padding: 10px 14px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #e8e4dc; outline: none; transition: border-color 0.2s; color-scheme: dark; }
+input[type="date"]:focus { border-color: rgba(107,95,160,0.6); }
+.btn-main { width: 100%; padding: 14px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.15em; border: 1px solid rgba(107,95,160,0.5); border-radius: 10px; background: rgba(107,95,160,0.2); color: #c4b8e8; cursor: pointer; margin-top: 0.5rem; transition: all 0.2s; }
+.btn-main:hover { background: rgba(107,95,160,0.35); border-color: rgba(107,95,160,0.8); color: #e0d8f5; }
+.result { display: none; margin-top: 2rem; }
+.result-header { text-align: center; margin-bottom: 1.5rem; }
+.result-header p { font-size: 11px; letter-spacing: 0.2em; color: #6b5fa0; }
+.signs-row { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; }
+.sign-box { text-align: center; }
+.sign-name { font-family: 'Noto Serif JP', serif; font-size: 18px; color: #e8e4dc; }
+.sign-sub { font-size: 11px; color: #8a8499; margin-top: 4px; }
+.vs { font-size: 20px; color: #6b5fa0; opacity: 0.6; }
+.result-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; position: relative; overflow: hidden; }
+.result-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.result-card.harmony::before { background: linear-gradient(180deg, #f5c842, #e8943a); }
+.result-card.tension::before { background: linear-gradient(180deg, #c4a8e8, #8060c0); }
+.result-card.advice::before { background: linear-gradient(180deg, #8ec4a8, #4a9070); }
+.card-label { font-size: 11px; letter-spacing: 0.12em; margin-bottom: 8px; color: #c8a040; }
+.card-label.tension { color: #8060c0; }
+.card-label.advice { color: #4a9070; }
+.card-desc { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.cta-card { margin-top: 1.5rem; padding: 1.5rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; text-align: center; }
+.cta-card p { font-size: 13px; color: #8a8499; line-height: 1.9; margin-bottom: 1.25rem; }
+.cta-card a { display: inline-block; padding: 10px 28px; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; background: rgba(107,95,160,0.25); border: 1px solid rgba(107,95,160,0.5); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; }
+.cta-card a:hover { background: rgba(107,95,160,0.4); color: #e0d8f5; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 0.75rem; padding: 11px 28px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.08em; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.share-btn:hover { background: rgba(255,255,255,0.1); color: #e0d8f5; }
+.share-icon { width: 14px; height: 14px; fill: currentColor; }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: #3a3650; letter-spacing: 0.1em; }
+.footer a { color: #3a3650; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#6b5fa0" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="24" cy="24" r="13" stroke="#6b5fa0" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="24" cy="24" r="2.5" fill="#a89fc0"/>
+      <line x1="24" y1="4" x2="24" y2="44" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <line x1="4" y1="24" x2="44" y2="24" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="24" cy="4" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="4" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="44" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+    </svg>
+    <h1>みずきの星メモ</h1>
+  </div>
+  <div class="card-main">
+    <div class="card-header">
+      <h2>心理占星術 相性診断</h2>
+      <div class="divider"></div>
+      <p>2人の生年月日から月星座の相性テーマをお伝えします。<br>「なぜすれ違うのか」が見えてくるかもしれません。</p>
+    </div>
+    <div class="person-group">
+      <div class="person-label">自分の生年月日</div>
+      <div class="form-group">
+        <input type="date" id="birthdate1" max="2010-12-31" min="1940-01-01" />
+      </div>
+    </div>
+    <div class="person-group">
+      <div class="person-label">相手の生年月日</div>
+      <div class="form-group">
+        <input type="date" id="birthdate2" max="2010-12-31" min="1940-01-01" />
+      </div>
+    </div>
+    <button class="btn-main" onclick="diagnose()">相性を診断する</button>
+    <div class="result" id="result">
+      <div class="result-header" style="margin-top:1.75rem;">
+        <div class="divider"></div>
+        <p>月星座の相性テーマ</p>
+      </div>
+      <div class="signs-row">
+        <div class="sign-box">
+          <div class="sign-name" id="moon1"></div>
+          <div class="sign-sub">自分の月星座</div>
+        </div>
+        <div class="vs">×</div>
+        <div class="sign-box">
+          <div class="sign-name" id="moon2"></div>
+          <div class="sign-sub">相手の月星座</div>
+        </div>
+      </div>
+      <div class="result-card harmony">
+        <div class="card-label">2人の調和するテーマ</div>
+        <div class="card-desc" id="harmony-desc"></div>
+      </div>
+      <div class="result-card tension">
+        <div class="card-label tension">すれ違いが生まれやすいテーマ</div>
+        <div class="card-desc" id="tension-desc"></div>
+      </div>
+      <div class="result-card advice">
+        <div class="card-label advice">関係を深めるヒント</div>
+        <div class="card-desc" id="advice-desc"></div>
+      </div>
+      <div class="cta-card">
+        <p>月星座の相性をさらに深く知りたい方へ。<br>みずきの星メモで詳しく解説しています。</p>
+        <a href="https://note.com/hoshimemo" target="_blank">マガジンを読む →</a>
+        <a class="share-btn" id="share-btn" href="#" target="_blank">
+          <svg class="share-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Xでシェアする
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><a href="https://note.com/hoshimemo">みずきの星メモ</a></div>
+</div>
+<script>
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${3+Math.random()*4}s;--delay:${-Math.random()*6}s;--op:${0.3+Math.random()*0.6};`;
+    container.appendChild(s);
+  }
+})();
+
+const elements = {
+  '牡羊座':'火', '獅子座':'火', '射手座':'火',
+  '牡牛座':'地', '乙女座':'地', '山羊座':'地',
+  '双子座':'風', '天秤座':'風', '水瓶座':'風',
+  '蟹座':'水',  '蠍座':'水',  '魚座':'水',
+};
+
+const elementCompatibility = {
+  '火火': { harmony: '2人ともエネルギーが強く、互いの情熱を高め合えます。行動力と創造性で共鳴できる関係です。', tension: '競争心が出やすく、どちらも引かないため衝突することも。「どちらが正しいか」ではなく、それぞれの個性を認め合うことが大切です。', advice: '互いの情熱を戦わせるのではなく、同じ方向に向けることで、大きな力が生まれます。' },
+  '火地': { harmony: '火の情熱と地の安定が補い合えます。地が火の行動力を支え、火が地に刺激を与える関係です。', tension: '火は変化を求め、地は安定を求めます。スピードや変化への耐性のズレがすれ違いの原因になることも。', advice: '相手のペースを尊重することが鍵です。急ぎすぎず、でも立ち止まりすぎず。' },
+  '火風': { harmony: '知性と情熱が組み合わさり、会話が弾む関係です。互いに刺激し合い、アイデアが広がります。', tension: '火は感情で動き、風は論理で動きます。感情的な反応と分析的な態度のズレがすれ違いを生むことも。', advice: '感情と理性、どちらも大切な言語です。相手の「言語」で話しかける努力が理解を深めます。' },
+  '火水': { harmony: '情熱と深い感情性が組み合わさります。火の行動力が水の夢を現実に引き出し、水の共感が火を支えます。', tension: '火は前進を求め、水は感情を処理したがります。スピードと感情的な深さのズレがすれ違いを生みやすいです。', advice: '水の感情に丁寧に向き合うことが、火への信頼につながります。急かさず、感じさせてあげてください。' },
+  '地地': { harmony: '安定・現実・誠実さで深く共鳴します。長期的な信頼関係を築きやすく、安心感のある関係です。', tension: '変化への抵抗が両方に出やすく、互いに頑固になることも。成長のための変化を避けてしまう可能性があります。', advice: '安定の中にも、小さな変化を取り入れる勇気を。互いに「挑戦」を支え合える関係を目指してください。' },
+  '地風': { harmony: '地の現実感と風の知性が補い合います。実践と理論のバランスが取れた関係です。', tension: '地は感覚・実感を重視し、風は概念・言葉を重視します。「なぜそれが必要なの？」という問いが行き違いを生むことも。', advice: '理論だけでなく、実際に体験することを大切に。地の「やってみて確かめる」姿勢が関係を豊かにします。' },
+  '地水': { harmony: '安定と深い感情性が組み合わさります。地が水の感情を支え、水が地に深みをもたらす関係です。', tension: '地は現実的に考え、水は感情的に反応します。「なぜそんなに感じるの？」という無理解がすれ違いを生むことも。', advice: '水の感情に論理で答えようとしないこと。まず「そうなんだね」と受け取ることが、深い信頼を育てます。' },
+  '風風': { harmony: '知的な刺激と会話が豊かな関係です。互いの考えを交換し合い、視野が広がります。', tension: 'どちらも感情より論理を優先するため、感情的なつながりが薄くなることも。表面的な会話で終わりやすい傾向があります。', advice: '頭だけでなく、感情も共有してみてください。「実はこう感じていた」という言葉が、関係を深めます。' },
+  '風水': { harmony: '知性と感情が組み合わさります。風が水の感情を言語化する助けになり、水が風に深みをもたらします。', tension: '風は感情を分析しようとし、水はただ感じてほしいと思います。この違いが「わかってもらえない」という感覚を生みやすいです。', advice: '分析より共感を先に。「なぜそう感じるの？」より「そう感じるんだね」が、水の心を開きます。' },
+  '水水': { harmony: '感情の深さで強く共鳴します。言葉にしなくても通じ合える、深い感情的つながりが生まれます。', tension: '互いに感情的になりすぎて、客観的な視点を失うことも。感情の渦に2人で巻き込まれやすい傾向があります。', advice: '時には感情から少し距離を置いて、客観的に状況を見ることを互いに助け合ってください。' },
+};
+
+function getMoonSign(date) {
+  const epoch = new Date('2000-01-01');
+  const days = (date - epoch) / 86400000;
+  const phase = ((days % 29.53058867) + 29.53058867) % 29.53058867;
+  const order = ['蟹座','獅子座','乙女座','天秤座','蠍座','射手座','山羊座','水瓶座','魚座','牡羊座','牡牛座','双子座'];
+  return order[Math.floor((phase / 29.53058867) * 12) % 12];
+}
+
+function diagnose() {
+  const val1 = document.getElementById('birthdate1').value;
+  const val2 = document.getElementById('birthdate2').value;
+  if (!val1 || !val2) { alert('2人の生年月日を入力してください'); return; }
+
+  const moon1 = getMoonSign(new Date(val1));
+  const moon2 = getMoonSign(new Date(val2));
+  const elem1 = elements[moon1];
+  const elem2 = elements[moon2];
+  const key = elem1 + elem2;
+  const reverseKey = elem2 + elem1;
+  const data = elementCompatibility[key] || elementCompatibility[reverseKey];
+
+  document.getElementById('moon1').textContent = moon1;
+  document.getElementById('moon2').textContent = moon2;
+  document.getElementById('harmony-desc').textContent = data.harmony;
+  document.getElementById('tension-desc').textContent = data.tension;
+  document.getElementById('advice-desc').textContent = data.advice;
+
+  const shareText = `私の月星座は${moon1}、相手は${moon2}。\n\nすれ違いが生まれやすいのは「${data.tension.slice(0, 30)}...」\n\nでも「${data.advice.slice(0, 25)}...」\n\nあなたも相性を診断してみてください。\n👉 https://chopchop1.github.io/hoshimemo-tool/compatibility/\n#心理占星術 #みずきの星メモ`;
+  document.getElementById('share-btn').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
+
+  const result = document.getElementById('result');
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

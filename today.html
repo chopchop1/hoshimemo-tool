@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日の月星座 | みずきの星メモ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #0d0f1a; color: #e8e4dc; min-height: 100vh; padding: 2.5rem 1rem; position: relative; overflow-x: hidden; }
+.stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--op); } }
+.wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+.logo { text-align: center; margin-bottom: 2.5rem; }
+.logo-mark { width: 48px; height: 48px; margin: 0 auto 0.75rem; }
+.logo h1 { font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #a89fc0; }
+.card-main { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem 1.75rem; text-align: center; }
+.date-label { font-size: 11px; letter-spacing: 0.2em; color: #6b5fa0; margin-bottom: 1rem; }
+.divider { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #6b5fa0, transparent); margin: 1rem auto; }
+.moon-icon { font-size: 48px; margin: 1rem 0; }
+.moon-sign { font-family: 'Noto Serif JP', serif; font-size: 36px; font-weight: 400; color: #e8e4dc; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.moon-keyword { font-size: 13px; color: #7090c0; letter-spacing: 0.15em; margin-bottom: 1.5rem; }
+.theme-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.25rem 1.5rem; margin: 1rem 0; text-align: left; }
+.theme-label { font-size: 11px; letter-spacing: 0.12em; color: #7090c0; margin-bottom: 8px; }
+.theme-desc { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.advice-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.25rem 1.5rem; margin: 1rem 0; text-align: left; }
+.advice-label { font-size: 11px; letter-spacing: 0.12em; color: #4a9070; margin-bottom: 8px; }
+.cta-card { margin-top: 1.5rem; padding: 1.5rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; }
+.cta-card p { font-size: 13px; color: #8a8499; line-height: 1.9; margin-bottom: 1.25rem; }
+.cta-card a { display: inline-block; padding: 10px 28px; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; background: rgba(107,95,160,0.25); border: 1px solid rgba(107,95,160,0.5); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; }
+.cta-card a:hover { background: rgba(107,95,160,0.4); color: #e0d8f5; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 0.75rem; padding: 11px 28px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.08em; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.share-btn:hover { background: rgba(255,255,255,0.1); color: #e0d8f5; }
+.share-icon { width: 14px; height: 14px; fill: currentColor; }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: #3a3650; letter-spacing: 0.1em; }
+.footer a { color: #3a3650; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#6b5fa0" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="24" cy="24" r="13" stroke="#6b5fa0" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="24" cy="24" r="2.5" fill="#a89fc0"/>
+      <line x1="24" y1="4" x2="24" y2="44" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <line x1="4" y1="24" x2="44" y2="24" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="24" cy="4" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="4" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="44" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+    </svg>
+    <h1>みずきの星メモ</h1>
+  </div>
+  <div class="card-main">
+    <div class="date-label" id="today-date"></div>
+    <div class="divider"></div>
+    <div class="moon-icon">☽</div>
+    <div class="moon-sign" id="moon-sign"></div>
+    <div class="moon-keyword" id="moon-keyword"></div>
+    <div class="theme-card">
+      <div class="theme-label">☽ 今日の心理的テーマ</div>
+      <div class="theme-desc" id="theme-desc"></div>
+    </div>
+    <div class="advice-card">
+      <div class="advice-label">今日を過ごすヒント</div>
+      <div class="theme-desc" id="advice-desc"></div>
+    </div>
+    <div class="cta-card">
+      <p>月星座の心理的テーマをさらに深く知りたい方へ。<br>みずきの星メモで詳しく解説しています。</p>
+      <a href="https://note.com/hoshimemo" target="_blank">マガジンを読む →</a>
+      <a class="share-btn" id="share-btn" href="#" target="_blank">
+        <svg class="share-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        今日の月をシェアする
+      </a>
+    </div>
+  </div>
+  <div class="footer"><a href="https://note.com/hoshimemo">みずきの星メモ</a></div>
+</div>
+<script>
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${3+Math.random()*4}s;--delay:${-Math.random()*6}s;--op:${0.3+Math.random()*0.6};`;
+    container.appendChild(s);
+  }
+})();
+
+const moonData = {
+  '牡羊座': { keyword: '行動・衝動・始まり', theme: '感情が素早く動く一日です。直感を信じて行動するエネルギーが高まっています。新しいことを始めるのに向いている時期です。', advice: '衝動的な判断には少し立ち止まりを。エネルギーを好きなことに向けると充実感が生まれます。' },
+  '牡牛座': { keyword: '安定・感覚・享楽', theme: '身体の感覚や安心感を求める一日です。ゆっくりとした時間の流れを楽しむことで、感情が落ち着きます。', advice: '美味しいものを食べる、好きな香りを嗅ぐなど、五感を喜ばせることが心の栄養になります。' },
+  '双子座': { keyword: '知識・会話・好奇心', theme: '情報収集や会話がスムーズな一日です。好奇心が高まり、新しい視点に触れたくなるでしょう。', advice: '気になることを調べたり、誰かと話したりすることで、感情が整理されます。' },
+  '蟹座': { keyword: '感情・家族・保護', theme: '感情が敏感になる一日です。親しい人との時間や、安心できる場所を大切にしたくなるでしょう。', advice: '感情をそのまま感じることを許してください。無理に元気でいようとしなくていい一日です。' },
+  '獅子座': { keyword: '表現・喜び・承認', theme: '自分を表現したくなる一日です。創造的な活動や、楽しいことに積極的に取り組むエネルギーが高まっています。', advice: '自分が輝ける場所に出てみましょう。誰かを喜ばせることが、自分の喜びにもなる日です。' },
+  '乙女座': { keyword: '分析・整理・改善', theme: '細部への注意力が高まる一日です。整理整頓や、物事を丁寧に進めることに満足感を感じるでしょう。', advice: '完璧を求めすぎず、「今日できることをやった」という達成感を大切にしてください。' },
+  '天秤座': { keyword: '調和・関係・美', theme: '人間関係や美しさに敏感になる一日です。バランスを取ることや、誰かと対話することで心が整います。', advice: '自分の意見も大切にしながら、相手の立場にも寄り添う。そのバランスを意識してみてください。' },
+  '蠍座': { keyword: '深層・変容・本質', theme: '物事の深いところに目が向く一日です。表面的なことより、本質を見たくなるでしょう。', advice: '感情を抑え込まずに、静かに内側と向き合う時間を作ってみてください。' },
+  '射手座': { keyword: '自由・探求・理想', theme: '広い視野と自由を求める一日です。遠くのことや、大きなテーマについて考えたくなるでしょう。', advice: '普段と違う道を歩く、新しい本を開くなど、小さな冒険が気分を変えてくれます。' },
+  '山羊座': { keyword: '責任・達成・現実', theme: '現実的なことに集中できる一日です。目標に向かって着実に進むエネルギーが高まっています。', advice: 'やるべきことをひとつ片付けることで、大きな達成感が得られます。休息も「やるべきこと」のひとつです。' },
+  '水瓶座': { keyword: '独自性・改革・俯瞰', theme: '客観的な視点が冴える一日です。普段と違う角度から物事を見ることで、新しい発見があるでしょう。', advice: '自分らしさを大切に。周りと違っていても、それがあなたの価値です。' },
+  '魚座': { keyword: '共感・夢・溶解', theme: '感受性が高まる一日です。音楽や芸術、自然に触れることで、深い癒しを感じられるでしょう。', advice: '境界線を意識してください。他者の感情に飲み込まれすぎず、自分の感覚を保つことが大切な日です。' },
+};
+
+function getMoonSign(date) {
+  const epoch = new Date('2000-01-01');
+  const days = (date - epoch) / 86400000;
+  const phase = ((days % 29.53058867) + 29.53058867) % 29.53058867;
+  const order = ['蟹座','獅子座','乙女座','天秤座','蠍座','射手座','山羊座','水瓶座','魚座','牡羊座','牡牛座','双子座'];
+  return order[Math.floor((phase / 29.53058867) * 12) % 12];
+}
+
+const today = new Date();
+const moon = getMoonSign(today);
+const data = moonData[moon];
+
+const dateStr = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
+document.getElementById('today-date').textContent = `${dateStr}の月星座`;
+document.getElementById('moon-sign').textContent = moon;
+document.getElementById('moon-keyword').textContent = data.keyword;
+document.getElementById('theme-desc').textContent = data.theme;
+document.getElementById('advice-desc').textContent = data.advice;
+
+const shareText = `今日（${dateStr}）の月星座は${moon}。\n\nテーマは「${data.keyword}」。\n\n${data.advice}\n\n毎日の月星座はこちらで確認できます。\n👉 https://chopchop1.github.io/hoshimemo-tool/today/\n#心理占星術 #みずきの星メモ #今日の月星座`;
+document.getElementById('share-btn').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
+</script>
+</body>
+</html>

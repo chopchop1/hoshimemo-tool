@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心理占星術 診断ツール集 | みずきの星メモ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #0d0f1a; color: #e8e4dc; min-height: 100vh; padding: 2.5rem 1rem; position: relative; overflow-x: hidden; }
+.stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--op); } }
+.wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+.logo { text-align: center; margin-bottom: 2.5rem; }
+.logo-mark { width: 48px; height: 48px; margin: 0 auto 0.75rem; }
+.logo h1 { font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #a89fc0; }
+.card-header { text-align: center; margin-bottom: 2rem; }
+.card-header h2 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; color: #e8e4dc; margin-bottom: 0.75rem; }
+.card-header p { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.divider { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #6b5fa0, transparent); margin: 1.25rem auto; }
+.tool-card { display: block; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; text-decoration: none; color: inherit; transition: all 0.2s; position: relative; overflow: hidden; }
+.tool-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.tool-card:nth-child(1)::before { background: linear-gradient(180deg, #f5c842, #a8c4e8, #8ec4a8); }
+.tool-card:nth-child(2)::before { background: linear-gradient(180deg, #a8c4e8, #7090c0); }
+.tool-card:nth-child(3)::before { background: linear-gradient(180deg, #c8a040, #8a6010); }
+.tool-card:nth-child(4)::before { background: linear-gradient(180deg, #a8c4e8, #4a9070); }
+.tool-card:nth-child(5)::before { background: linear-gradient(180deg, #c4a8e8, #6b5fa0); }
+.tool-card:nth-child(6)::before { background: linear-gradient(180deg, #8ec4a8, #4a9070); }
+.tool-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
+.tool-icon { font-size: 24px; margin-bottom: 0.5rem; }
+.tool-name { font-family: 'Noto Serif JP', serif; font-size: 17px; font-weight: 400; color: #e8e4dc; margin-bottom: 0.5rem; }
+.tool-desc { font-size: 13px; color: #8a8499; line-height: 1.7; }
+.tool-arrow { position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); color: #6b5fa0; font-size: 18px; }
+.note-link { display: block; text-align: center; margin-top: 2rem; padding: 1rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; text-decoration: none; font-size: 13px; color: #c4b8e8; letter-spacing: 0.1em; transition: all 0.2s; }
+.note-link:hover { background: rgba(107,95,160,0.15); }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: #3a3650; letter-spacing: 0.1em; }
+.footer a { color: #3a3650; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#6b5fa0" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="24" cy="24" r="13" stroke="#6b5fa0" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="24" cy="24" r="2.5" fill="#a89fc0"/>
+      <line x1="24" y1="4" x2="24" y2="44" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <line x1="4" y1="24" x2="44" y2="24" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="24" cy="4" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="4" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="44" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+    </svg>
+    <h1>みずきの星メモ</h1>
+  </div>
+  <div class="card-header">
+    <h2>心理占星術 診断ツール集</h2>
+    <div class="divider"></div>
+    <p>自分を知るための、6つの無料ツールです。</p>
+  </div>
+
+  <a class="tool-card" href="index.html">
+    <div class="tool-icon">☀☽↑</div>
+    <div class="tool-name">かんたん診断</div>
+    <div class="tool-desc">太陽星座・月星座・アセンダントの心理的テーマを一度に確認できます。</div>
+    <div class="tool-arrow">→</div>
+  </a>
+
+  <a class="tool-card" href="attachment.html">
+    <div class="tool-icon">☽</div>
+    <div class="tool-name">月星座 × 愛着スタイル診断</div>
+    <div class="tool-desc">月星座から、あなたの愛着スタイルの傾向を読み解きます。</div>
+    <div class="tool-arrow">→</div>
+  </a>
+
+  <a class="tool-card" href="saturn.html">
+    <div class="tool-icon">♄</div>
+    <div class="tool-name">土星コンプレックス診断</div>
+    <div class="tool-desc">土星星座から、あなたが抱えやすいコンプレックスのテーマを読み解きます。</div>
+    <div class="tool-arrow">→</div>
+  </a>
+
+  <a class="tool-card" href="today.html">
+    <div class="tool-icon">☽</div>
+    <div class="tool-name">今日の月星座</div>
+    <div class="tool-desc">今日の月星座と、心理的テーマ・過ごし方のヒントをお届けします。</div>
+    <div class="tool-arrow">→</div>
+  </a>
+
+  <a class="tool-card" href="compatibility.html">
+    <div class="tool-icon">×</div>
+    <div class="tool-name">相性診断</div>
+    <div class="tool-desc">2人の月星座から、調和とすれ違いのテーマを読み解きます。</div>
+    <div class="tool-arrow">→</div>
+  </a>
+
+  <a class="tool-card" href="year.html">
+    <div class="tool-icon">♃♄</div>
+    <div class="tool-name">今年のテーマ診断</div>
+    <div class="tool-desc">木星・土星のトランジットから、2026年のあなたへのメッセージをお届けします。</div>
+    <div class="tool-arrow">→</div>
+  </a>
+
+  <a class="note-link" href="https://note.com/hoshimemo" target="_blank">
+    各テーマの詳しい解説はマガジンで → note.com/hoshimemo
+  </a>
+
+  <div class="footer"><a href="https://note.com/hoshimemo">みずきの星メモ</a></div>
+</div>
+<script>
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${3+Math.random()*4}s;--delay:${-Math.random()*6}s;--op:${0.3+Math.random()*0.6};`;
+    container.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

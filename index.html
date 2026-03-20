@@ -258,6 +258,38 @@ input[type="time"]:focus {
   color: #e0d8f5;
 }
 
+.share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 11px 28px;
+  font-size: 13px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #c4b8e8;
+  border-radius: 99px;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.share-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #e0d8f5;
+}
+
+.share-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
 .footer {
   text-align: center;
   margin-top: 2rem;
@@ -339,6 +371,10 @@ input[type="time"]:focus {
       <div class="cta-card">
         <p>それぞれの星座が持つ心理的テーマを<br>さらに深く知りたい方へ。<br>みずきの星メモでは、惑星・星座・ハウスを<br>体系的に解説したマガジンを毎週更新しています。</p>
         <a href="https://note.com/hoshimemo" target="_blank">マガジンを読む →</a>
+        <a class="share-btn" id="share-btn" href="#" target="_blank">
+          <svg class="share-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Xでシェアする
+        </a>
       </div>
     </div>
   </div>
@@ -434,6 +470,38 @@ function diagnose() {
   document.getElementById('moon-theme').textContent = themes[moon];
   document.getElementById('asc-sign').textContent  = asc;
   document.getElementById('asc-theme').textContent = themes[asc];
+
+  const outerImage = {
+    '牡羊座': 'いつも積極的で頼りになる',
+    '牡牛座': '穏やかでどっしりしている',
+    '双子座': '明るくて話しかけやすい',
+    '蟹座':   '優しくて気遣いができる',
+    '獅子座': '自信があってかっこいい',
+    '乙女座': 'しっかりしていて几帳面',
+    '天秤座': 'おだやかで感じがいい',
+    '蠍座':   '落ち着いていて芯が強い',
+    '射手座': '自由で楽しそうに見える',
+    '山羊座': '真面目で頼りになる',
+    '水瓶座': 'マイペースでクールに見える',
+    '魚座':   '優しくてふんわりしている',
+  };
+  const innerNeed = {
+    '牡羊座': '本当は認められたくて、じっとしていられない',
+    '牡牛座': '本当は変化が怖くて、安心できる場所を探している',
+    '双子座': '本当は孤独で、誰かにわかってほしい',
+    '蟹座':   '本当は傷つきやすくて、守られたい',
+    '獅子座': '本当は不安で、愛されているか確かめたい',
+    '乙女座': '本当は自分を責めていて、完璧じゃないと怖い',
+    '天秤座': '本当は決められなくて、誰かに選んでほしい',
+    '蠍座':   '本当は深く傷ついていて、信頼できる人を探している',
+    '射手座': '本当は何かから逃げていて、自由を言い訳にしている',
+    '山羊座': '本当は認めてもらえるか不安で、結果で証明しようとしている',
+    '水瓶座': '本当は孤立が怖くて、それでも群れられない',
+    '魚座':   '本当は境界線が薄くて、誰かの感情に飲み込まれやすい',
+  };
+  const shareText = `「${outerImage[sun]}」って思われてるのに、\n${innerNeed[moon]}。\n\nそれ、太陽星座と月星座のズレかもしれません。\n\n私は太陽が${sun}、月が${moon}でした。\n「外向きの自分」と「本当の自分」が違った。\n\nあなたの月星座、調べてみてください。\n知らなかった自分に会えるかもしれません。\n\n👉 https://chopchop1.github.io/hoshimemo-tool/\n#心理占星術 #みずきの星メモ`;
+  const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
+  document.getElementById('share-btn').href = shareUrl;
 
   const result = document.getElementById('result');
   result.style.display = 'block';

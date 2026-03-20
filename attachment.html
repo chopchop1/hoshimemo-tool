@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月星座×愛着スタイル診断 | みずきの星メモ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #0d0f1a; color: #e8e4dc; min-height: 100vh; padding: 2.5rem 1rem; position: relative; overflow-x: hidden; }
+.stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--op); } }
+.wrap { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+.logo { text-align: center; margin-bottom: 2.5rem; }
+.logo-mark { width: 48px; height: 48px; margin: 0 auto 0.75rem; }
+.logo h1 { font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #a89fc0; }
+.card-main { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem 1.75rem; }
+.card-header { text-align: center; margin-bottom: 2rem; }
+.card-header h2 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.05em; color: #e8e4dc; margin-bottom: 0.75rem; }
+.card-header p { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.divider { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #6b5fa0, transparent); margin: 1.25rem auto; }
+.form-group { margin-bottom: 1.25rem; }
+label { display: block; font-size: 12px; letter-spacing: 0.1em; color: #8a8499; margin-bottom: 8px; }
+input[type="date"] { width: 100%; padding: 12px 14px; font-size: 15px; font-family: 'Noto Sans JP', sans-serif; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; color: #e8e4dc; outline: none; transition: border-color 0.2s; color-scheme: dark; }
+input[type="date"]:focus { border-color: rgba(107,95,160,0.6); }
+.btn-main { width: 100%; padding: 14px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.15em; border: 1px solid rgba(107,95,160,0.5); border-radius: 10px; background: rgba(107,95,160,0.2); color: #c4b8e8; cursor: pointer; margin-top: 0.5rem; transition: all 0.2s; }
+.btn-main:hover { background: rgba(107,95,160,0.35); border-color: rgba(107,95,160,0.8); color: #e0d8f5; }
+.result { display: none; margin-top: 2rem; }
+.result-header { text-align: center; margin-bottom: 1.5rem; }
+.result-header p { font-size: 11px; letter-spacing: 0.2em; color: #6b5fa0; }
+.result-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; position: relative; overflow: hidden; }
+.result-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.result-card.moon::before { background: linear-gradient(180deg, #a8c4e8, #7090c0); }
+.result-card.attach::before { background: linear-gradient(180deg, #c4a8e8, #8060c0); }
+.result-card.advice::before { background: linear-gradient(180deg, #8ec4a8, #4a9070); }
+.card-label { font-size: 11px; letter-spacing: 0.12em; margin-bottom: 8px; color: #7090c0; }
+.card-label.attach { color: #8060c0; }
+.card-label.advice { color: #4a9070; }
+.card-name { font-family: 'Noto Serif JP', serif; font-size: 22px; font-weight: 400; color: #e8e4dc; margin-bottom: 8px; }
+.card-desc { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.cta-card { margin-top: 1.5rem; padding: 1.5rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; text-align: center; }
+.cta-card p { font-size: 13px; color: #8a8499; line-height: 1.9; margin-bottom: 1.25rem; }
+.cta-card a { display: inline-block; padding: 10px 28px; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; background: rgba(107,95,160,0.25); border: 1px solid rgba(107,95,160,0.5); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; }
+.cta-card a:hover { background: rgba(107,95,160,0.4); color: #e0d8f5; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 0.75rem; padding: 11px 28px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.08em; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.share-btn:hover { background: rgba(255,255,255,0.1); color: #e0d8f5; }
+.share-icon { width: 14px; height: 14px; fill: currentColor; }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: #3a3650; letter-spacing: 0.1em; }
+.footer a { color: #3a3650; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#6b5fa0" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="24" cy="24" r="13" stroke="#6b5fa0" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="24" cy="24" r="2.5" fill="#a89fc0"/>
+      <line x1="24" y1="4" x2="24" y2="44" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <line x1="4" y1="24" x2="44" y2="24" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="24" cy="4" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="4" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="44" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+    </svg>
+    <h1>みずきの星メモ</h1>
+  </div>
+  <div class="card-main">
+    <div class="card-header">
+      <h2>月星座 × 愛着スタイル診断</h2>
+      <div class="divider"></div>
+      <p>生年月日から月星座を算出し、<br>あなたの愛着スタイルの傾向をお伝えします。</p>
+    </div>
+    <div class="form-group">
+      <label>生年月日</label>
+      <input type="date" id="birthdate" max="2010-12-31" min="1940-01-01" />
+    </div>
+    <button class="btn-main" onclick="diagnose()">診断する</button>
+    <div class="result" id="result">
+      <div class="result-header" style="margin-top:1.75rem;">
+        <div class="divider"></div>
+        <p>あなたの愛着スタイル</p>
+      </div>
+      <div class="result-card moon">
+        <div class="card-label">☽ 月星座</div>
+        <div class="card-name" id="moon-sign"></div>
+        <div class="card-desc" id="moon-desc"></div>
+      </div>
+      <div class="result-card attach">
+        <div class="card-label attach">愛着スタイルの傾向</div>
+        <div class="card-name" id="attach-type"></div>
+        <div class="card-desc" id="attach-desc"></div>
+      </div>
+      <div class="result-card advice">
+        <div class="card-label advice">心理占星術からのヒント</div>
+        <div class="card-desc" id="attach-advice"></div>
+      </div>
+      <div class="cta-card">
+        <p>月星座と愛着スタイルの関係をさらに深く知りたい方へ。<br>みずきの星メモで詳しく解説しています。</p>
+        <a href="https://note.com/hoshimemo" target="_blank">マガジンを読む →</a>
+        <a class="share-btn" id="share-btn" href="#" target="_blank">
+          <svg class="share-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Xでシェアする
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><a href="https://note.com/hoshimemo">みずきの星メモ</a></div>
+</div>
+<script>
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${3+Math.random()*4}s;--delay:${-Math.random()*6}s;--op:${0.3+Math.random()*0.6};`;
+    container.appendChild(s);
+  }
+})();
+
+const moonData = {
+  '牡羊座': { desc: '感情の反応が速く、直感的に動きます。傷ついても立ち直りが早い傾向があります。', attach: '不安型よりの安定型', attachDesc: '感情を素直に出せる一方、すぐに反応しすぎて関係を壊してしまうことも。「もっと愛されたい」という欲求が強く出る場面があります。', advice: '感情が湧いたとき、すぐに行動する前に少し間を置く習慣が、関係の安定につながります。' },
+  '牡牛座': { desc: '安定と安心を強く求めます。変化を嫌い、慣れた環境に深い安らぎを感じます。', attach: '安定型', attachDesc: '一度信頼した人への忠誠心が高く、安定した関係を築けます。ただし変化を求められると強いストレスを感じます。', advice: '「変わらないこと」への執着が、成長の妨げになることも。小さな変化を受け入れる練習が助けになります。' },
+  '双子座': { desc: '感情を言葉で処理しようとします。気持ちが揺れやすく、矛盾した感情を同時に抱えることも。', attach: '回避型よりの安定型', attachDesc: '感情を分析・言語化することで距離を保つ傾向があります。深い感情的なつながりが怖くなることも。', advice: '頭で考えすぎず、感情をそのまま感じる時間を持つことが、より深いつながりをもたらします。' },
+  '蟹座': { desc: '感情が深く、共感力が高い。家族や親しい人への強い保護本能を持ちます。', attach: '不安型', attachDesc: '深く愛するほど、失うことへの恐れが強くなります。「見捨てられるかも」という不安が行動に出やすい傾向があります。', advice: '自分の内側を安心の基盤にすること。他者からの承認に頼りすぎない自己肯定感が、関係を安定させます。' },
+  '獅子座': { desc: '感情を表現することへの強い欲求があります。認められ、愛されることで輝きます。', attach: '不安型よりの安定型', attachDesc: '愛情表現が豊かな一方、承認されないと傷つきやすい。「もっと注目してほしい」という欲求が関係に影響することも。', advice: '他者からの承認を待つより、自分で自分を認める練習が、感情の安定につながります。' },
+  '乙女座': { desc: '感情を整理・分析することで安心を得ます。不完全な自分を責めやすい傾向があります。', attach: '回避型', attachDesc: '感情より論理を優先しがち。「完璧でないと愛されない」という恐れが、深い関係を避ける原因になることも。', advice: '不完全な自分を許すことが、深いつながりへの第一歩。感情を評価せずにただ感じる練習を。' },
+  '天秤座': { desc: '調和と平和を強く求めます。対立を避けるあまり、本音を言えないことも。', attach: '回避型よりの安定型', attachDesc: '関係の平和を保つために自分の感情を後回しにしがち。「嫌われたくない」という恐れが行動の動機になることも。', advice: '自分の感情にも正直になること。本音を伝えることが、表面的でない本当の調和をもたらします。' },
+  '蠍座': { desc: '感情が深く強烈です。一度傷つくと長く引きずる傾向があります。', attach: '不安型', attachDesc: '深く愛するほど、裏切りへの恐れも強くなります。強烈な感情のコントロールに苦労することも。', advice: '信頼は時間をかけて育つもの。すべてをすぐに確かめようとせず、少しずつ心を開く練習が助けになります。' },
+  '射手座': { desc: '自由を強く求め、縛られることへの恐れがあります。感情より冒険心が先に立つことも。', attach: '回避型', attachDesc: '深いコミットメントを怖がる傾向があります。「自由を失う」という恐れが、関係を深めることへの抵抗になることも。', advice: '自由と深いつながりは共存できます。逃げることなく関係に向き合う勇気が、本当の自由をもたらします。' },
+  '山羊座': { desc: '感情を内側に抑え、外では落ち着いて見えます。責任感が強く、感情より義務を優先しがち。', attach: '回避型', attachDesc: '感情的なつながりより、役割や責任で関係を維持しようとする傾向があります。弱さを見せることへの強い抵抗も。', advice: '感情を見せることは弱さではありません。脆さを共有することが、より深い信頼関係を育てます。' },
+  '水瓶座': { desc: '感情より概念や理想を重視します。感情的な距離を保つことで安心を得ます。', attach: '回避型', attachDesc: '個人的な感情より全体・普遍的なものを重視するため、一対一の深い感情的つながりを避けることも。', advice: '特定の誰かとの深いつながりを恐れず、個性を保ちながら関係を深める練習が助けになります。' },
+  '魚座': { desc: '境界線が薄く、他者の感情に深く共鳴します。感情が溶け合いやすく、自分を見失うことも。', attach: '不安型よりの安定型', attachDesc: '他者への深い共感が強みである一方、自分と他者の感情の区別が曖昧になりやすい。依存関係になりやすい傾向も。', advice: '自分の感情と他者の感情を区別する練習が大切。境界線を持つことは、冷たさではなく健全さです。' },
+};
+
+function getMoonSign(date) {
+  const epoch = new Date('2000-01-01');
+  const days = (date - epoch) / 86400000;
+  const phase = ((days % 29.53058867) + 29.53058867) % 29.53058867;
+  const order = ['蟹座','獅子座','乙女座','天秤座','蠍座','射手座','山羊座','水瓶座','魚座','牡羊座','牡牛座','双子座'];
+  return order[Math.floor((phase / 29.53058867) * 12) % 12];
+}
+
+function diagnose() {
+  const val = document.getElementById('birthdate').value;
+  if (!val) { alert('生年月日を入力してください'); return; }
+  const date = new Date(val);
+  const moon = getMoonSign(date);
+  const data = moonData[moon];
+
+  document.getElementById('moon-sign').textContent = moon;
+  document.getElementById('moon-desc').textContent = data.desc;
+  document.getElementById('attach-type').textContent = data.attach;
+  document.getElementById('attach-desc').textContent = data.attachDesc;
+  document.getElementById('attach-advice').textContent = data.advice;
+
+  const shareText = `私の月星座は${moon}。愛着スタイルの傾向は「${data.attach}」でした。\n\n「${data.advice.slice(0, 30)}...」\n\nあなたの月星座と愛着スタイル、調べてみてください。\n👉 https://chopchop1.github.io/hoshimemo-tool/attachment/\n#心理占星術 #みずきの星メモ`;
+  document.getElementById('share-btn').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText);
+
+  const result = document.getElementById('result');
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
