@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta property="og:title" content="トランジット診断 | みずきの星メモ" />
+<meta property="og:description" content="生年月日を入力すると、現在の天体がネイタルホロスコープに与えている影響（トランジット）を心理占星術の視点で解説します。" />
+<meta name="description" content="生年月日を入力すると、現在の天体がネイタルホロスコープに与えている影響（トランジット）を心理占星術の視点で解説します。" />
+<meta property="og:url" content="https://chopchop1.github.io/hoshimemo-tool/transit.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="https://chopchop1.github.io/hoshimemo-tool/magazine-cover.png" />
+<meta property="og:site_name" content="みずきの星メモ" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://chopchop1.github.io/hoshimemo-tool/magazine-cover.png" />
+<title>トランジット診断 | みずきの星メモ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #0d0f1a; color: #e8e4dc; min-height: 100vh; padding: 2.5rem 1rem; position: relative; overflow-x: hidden; }
+.stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+@keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: var(--op); } }
+.wrap { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+.logo { text-align: center; margin-bottom: 2.5rem; }
+.logo-mark { width: 48px; height: 48px; margin: 0 auto 0.75rem; }
+.logo h1 { font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; letter-spacing: 0.2em; color: #a89fc0; }
+.back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #8a8499; text-decoration: none; letter-spacing: 0.05em; margin-bottom: 1.5rem; transition: color 0.2s; }
+.back-link:hover { color: #c4b8e8; }
+.card-main { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem 1.75rem; }
+.card-header { text-align: center; margin-bottom: 2rem; }
+.card-header h2 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.05em; color: #e8e4dc; margin-bottom: 0.75rem; }
+.card-header p { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.divider { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #6b5fa0, transparent); margin: 1.25rem auto; }
+.form-group { margin-bottom: 1.25rem; }
+label { display: block; font-size: 12px; letter-spacing: 0.1em; color: #8a8499; margin-bottom: 8px; }
+input[type="date"],
+input[type="time"],
+select {
+  width: 100%; padding: 12px 14px; font-size: 15px;
+  font-family: 'Noto Sans JP', sans-serif;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; color: #e8e4dc; outline: none; transition: border-color 0.2s;
+  color-scheme: dark;
+}
+input[type="date"]:focus, input[type="time"]:focus, select:focus { border-color: rgba(107,95,160,0.6); }
+select option { background: #1a1c2e; color: #e8e4dc; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.btn-main { width: 100%; padding: 14px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; letter-spacing: 0.15em; border: 1px solid rgba(107,95,160,0.5); border-radius: 10px; background: rgba(107,95,160,0.2); color: #c4b8e8; cursor: pointer; margin-top: 0.5rem; transition: all 0.2s; }
+.btn-main:hover { background: rgba(107,95,160,0.35); border-color: rgba(107,95,160,0.8); color: #e0d8f5; }
+/* result */
+.result { display: none; margin-top: 2rem; }
+.result-header { text-align: center; margin-bottom: 1.5rem; }
+.result-header p { font-size: 11px; letter-spacing: 0.2em; color: #6b5fa0; }
+/* planet grids */
+.section-title { font-size: 11px; letter-spacing: 0.15em; color: #8a8499; margin-bottom: 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.planet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem; }
+.planet-cell { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 0.6rem 0.9rem; }
+.planet-cell-name { font-size: 11px; color: #8a8499; margin-bottom: 2px; }
+.planet-cell-pos { font-size: 14px; color: #e8e4dc; }
+.planet-cell-pos .sym { color: #a89fc0; margin-right: 3px; }
+/* aspect cards */
+.aspect-section-title { font-size: 11px; letter-spacing: 0.15em; color: #8a8499; margin: 1.5rem 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.transit-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.1rem 1.25rem; margin-bottom: 0.85rem; position: relative; overflow: hidden; }
+.transit-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.transit-card.slow-soft::before  { background: linear-gradient(180deg, #a0d8a0, #4a9070); }
+.transit-card.slow-hard::before  { background: linear-gradient(180deg, #c8a0a0, #a03040); }
+.transit-card.slow-conj.jupiter::before  { background: linear-gradient(180deg, #f5c842, #c8a040); }
+.transit-card.slow-conj.saturn::before   { background: linear-gradient(180deg, #c4a0e8, #6b5fa0); }
+.transit-card.slow-conj.uranus::before   { background: linear-gradient(180deg, #c4a0e8, #6b5fa0); }
+.transit-card.slow-conj.neptune::before  { background: linear-gradient(180deg, #c4a0e8, #6b5fa0); }
+.transit-card.slow-conj.pluto::before    { background: linear-gradient(180deg, #c4a0e8, #6b5fa0); }
+.transit-card.fast-soft::before  { background: linear-gradient(180deg, #a0d8a0, #4a9070); }
+.transit-card.fast-hard::before  { background: linear-gradient(180deg, #c8a0a0, #a03040); }
+.transit-card.fast-conj::before  { background: linear-gradient(180deg, #c4b8e8, #6b5fa0); }
+.tc-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.tc-planets { font-family: 'Noto Serif JP', serif; font-size: 15px; color: #e8e4dc; }
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 99px; letter-spacing: 0.05em; }
+.badge-conj { background: rgba(107,95,160,0.2); color: #c4b8e8; border: 1px solid rgba(107,95,160,0.3); }
+.badge-soft { background: rgba(80,160,100,0.15); color: #a0d8b0; border: 1px solid rgba(80,160,100,0.2); }
+.badge-hard { background: rgba(200,80,80,0.15); color: #e8a0a0; border: 1px solid rgba(200,80,80,0.2); }
+.tc-orb { font-size: 10px; color: #6a6480; margin-left: auto; white-space: nowrap; }
+.tc-desc { font-size: 13px; color: #8a8499; line-height: 1.8; }
+.no-result { text-align: center; padding: 1.5rem; font-size: 13px; color: #8a8499; line-height: 1.8; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; }
+.precision-note { font-size: 11px; color: #4a4660; line-height: 1.7; margin-top: 1.25rem; text-align: center; }
+.cta-card { margin-top: 1.5rem; padding: 1.5rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; text-align: center; }
+.cta-card p { font-size: 13px; color: #8a8499; line-height: 1.9; margin-bottom: 1.25rem; }
+.cta-card a { display: inline-block; padding: 10px 28px; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; background: rgba(107,95,160,0.25); border: 1px solid rgba(107,95,160,0.5); color: #c4b8e8; border-radius: 99px; text-decoration: none; transition: all 0.2s; }
+.cta-card a:hover { background: rgba(107,95,160,0.4); color: #e0d8f5; }
+.note-link { display: block; text-align: center; margin-top: 1.5rem; padding: 1rem; background: rgba(107,95,160,0.08); border: 1px solid rgba(107,95,160,0.2); border-radius: 14px; text-decoration: none; font-size: 13px; color: #c4b8e8; letter-spacing: 0.1em; transition: all 0.2s; }
+.note-link:hover { background: rgba(107,95,160,0.15); }
+.footer { text-align: center; margin-top: 2rem; font-size: 11px; color: #3a3650; letter-spacing: 0.1em; }
+.footer a { color: #3a3650; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+  <div class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="20" stroke="#6b5fa0" stroke-width="0.5" opacity="0.4"/>
+      <circle cx="24" cy="24" r="13" stroke="#6b5fa0" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="24" cy="24" r="2.5" fill="#a89fc0"/>
+      <line x1="24" y1="4" x2="24" y2="44" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <line x1="4" y1="24" x2="44" y2="24" stroke="#6b5fa0" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="24" cy="4" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="24" cy="44" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="4" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+      <circle cx="44" cy="24" r="1.5" fill="#c4b8e8" opacity="0.8"/>
+    </svg>
+    <h1>みずきの星メモ</h1>
+  </div>
+
+  <a class="back-link" href="index.html">← ツール一覧に戻る</a>
+
+  <div class="card-main">
+    <div class="card-header">
+      <h2>トランジット診断</h2>
+      <div class="divider"></div>
+      <p>生年月日を入力すると、現在の天体があなたの<br>ネイタルホロスコープに与えている影響を<br>心理占星術の視点で読み解きます。</p>
+    </div>
+
+    <div class="form-group">
+      <label>生年月日（必須）</label>
+      <input type="date" id="birthdate" max="2010-12-31" min="1930-01-01" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>生まれた時間（任意）</label>
+        <input type="time" id="birthtime" value="12:00" />
+      </div>
+      <div class="form-group">
+        <label>タイムゾーン</label>
+        <select id="timezone">
+          <option value="9" selected>日本（UTC+9）</option>
+          <option value="8">中国・台湾（UTC+8）</option>
+          <option value="7">タイ（UTC+7）</option>
+          <option value="5.5">インド（UTC+5:30）</option>
+          <option value="1">中欧（UTC+1）</option>
+          <option value="0">英国（UTC+0）</option>
+          <option value="-5">米東部（UTC-5）</option>
+          <option value="-8">米西部（UTC-8）</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-main" onclick="diagnose()">トランジットを診断する</button>
+
+    <div class="result" id="result">
+      <div class="result-header" style="margin-top:1.75rem;">
+        <div class="divider"></div>
+        <p>TRANSIT READING</p>
+      </div>
+
+      <div class="section-title">ネイタル惑星位置</div>
+      <div class="planet-grid" id="natal-grid"></div>
+
+      <div class="section-title">現在のトランジット惑星位置</div>
+      <div class="planet-grid" id="transit-grid"></div>
+
+      <div class="aspect-section-title" id="slow-label">長期トランジット（木星・土星・天王星・海王星・冥王星）</div>
+      <div id="slow-aspects"></div>
+
+      <div class="aspect-section-title" id="fast-label" style="margin-top:1rem;">短期トランジット（太陽・月・水星・金星・火星）</div>
+      <div id="fast-aspects"></div>
+
+      <p class="precision-note">※計算は簡略天体力学式を使用しており、誤差が生じる場合があります。精密なホロスコープは専門家にご相談ください。</p>
+
+      <div class="cta-card">
+        <p>トランジットの読み解き方をさらに深く知りたい方へ。<br>みずきの星メモで詳しく解説しています。</p>
+        <a href="https://note.com/hoshimemo" target="_blank">各テーマの詳しい解説はnoteで → note.com/hoshimemo</a>
+      </div>
+    </div>
+  </div>
+
+  <a class="note-link" href="https://note.com/hoshimemo" target="_blank">各テーマの詳しい解説はnoteで → note.com/hoshimemo</a>
+  <div class="footer"><a href="https://note.com/hoshimemo">みずきの星メモ</a></div>
+</div>
+
+<script>
+/* ===== 星アニメーション ===== */
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${3+Math.random()*4}s;--delay:${-Math.random()*6}s;--op:${0.3+Math.random()*0.6};`;
+    container.appendChild(s);
+  }
+})();
+
+/* ===== 定数 ===== */
+const SIGN_NAMES = ['牡羊座','牡牛座','双子座','蟹座','獅子座','乙女座','天秤座','蠍座','射手座','山羊座','水瓶座','魚座'];
+const SIGN_SYMS  = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+const PLANET_LIST = [
+  { key:'sun',     label:'太陽', sym:'☉', fast:true  },
+  { key:'moon',    label:'月',   sym:'☽', fast:true  },
+  { key:'mercury', label:'水星', sym:'☿', fast:true  },
+  { key:'venus',   label:'金星', sym:'♀', fast:true  },
+  { key:'mars',    label:'火星', sym:'♂', fast:true  },
+  { key:'jupiter', label:'木星', sym:'♃', fast:false },
+  { key:'saturn',  label:'土星', sym:'♄', fast:false },
+  { key:'uranus',  label:'天王星',sym:'⛢',fast:false },
+  { key:'neptune', label:'海王星',sym:'♆',fast:false },
+  { key:'pluto',   label:'冥王星',sym:'♇',fast:false },
+];
+
+/* 軌道要素 [L0, n°/century, omega, e] */
+const ELEMENTS = {
+  sun:     [280.46646, 36000.76983, 102.93005, 0.016708],
+  moon:    [218.3165,  481267.8813,  83.3532,  0.054900],
+  mercury: [252.2509,  149472.6746,  77.4561,  0.205630],
+  venus:   [181.9798,   58517.8157, 131.5637,  0.006773],
+  mars:    [355.4330,   19140.2993, 336.0600,  0.093400],
+  jupiter: [ 34.3515,    3034.9057,  14.3312,  0.048400],
+  saturn:  [ 50.0774,    1222.1138,  93.0572,  0.054200],
+  uranus:  [314.0550,     428.4670, 173.0050,  0.047200],
+  neptune: [304.3487,     218.4862,  48.1237,  0.008600],
+  pluto:   [238.6000,     145.2079, 224.0670,  0.248800],
+};
+
+const ASPECTS = [
+  { name:'合',           nameEn:'Conjunction', angle:0,   orb:8, type:'conj' },
+  { name:'セクスタイル', nameEn:'Sextile',      angle:60,  orb:5, type:'soft' },
+  { name:'スクエア',     nameEn:'Square',       angle:90,  orb:7, type:'hard' },
+  { name:'トライン',     nameEn:'Trine',        angle:120, orb:6, type:'soft' },
+  { name:'オポジション', nameEn:'Opposition',   angle:180, orb:8, type:'hard' },
+];
+
+/* ===== 数学ユーティリティ ===== */
+function norm360(d) { return ((d % 360) + 360) % 360; }
+function sinD(d) { return Math.sin(d * Math.PI / 180); }
+function cosD(d) { return Math.cos(d * Math.PI / 180); }
+
+function julianDay(year, month, day, hour) {
+  if (month <= 2) { year--; month += 12; }
+  const A = Math.floor(year / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25*(year+4716)) + Math.floor(30.6001*(month+1)) + day + hour/24 + B - 1524.5;
+}
+
+function eqCenter(M_deg, e) {
+  const M = M_deg * Math.PI / 180;
+  return (180/Math.PI) * (
+    (2*e - e*e*e/4) * Math.sin(M) +
+    (5*e*e/4)       * Math.sin(2*M) +
+    (13*e*e*e/12)   * Math.sin(3*M)
+  );
+}
+
+function getPlanetLon(key, T) {
+  if (key === 'sun') {
+    const L0 = norm360(280.46646 + 36000.76983*T + 0.0003032*T*T);
+    const M  = norm360(357.52911 + 35999.05029*T - 0.0001537*T*T);
+    const e  = 0.016708634 - 0.000042037*T;
+    const C  = (1.914602 - 0.004817*T - 0.000014*T*T)*sinD(M)
+             + (0.019993 - 0.000101*T)*sinD(2*M)
+             + 0.000289*sinD(3*M);
+    return norm360(L0 + C);
+  }
+  if (key === 'moon') {
+    const Lp = norm360(218.3164477 + 481267.88123421*T);
+    const Mp = norm360(134.9633964 + 477198.8675055*T);
+    const M2 = norm360(357.5291092 + 35999.0502909*T);
+    const D  = norm360(297.8501921 + 445267.1114034*T);
+    const F  = norm360(93.2720950  + 483202.0175233*T);
+    return norm360(Lp
+      + 6.2886*sinD(Mp)
+      + 1.2740*sinD(2*D - Mp)
+      + 0.6583*sinD(2*D)
+      + 0.2136*sinD(2*Mp)
+      - 0.1851*sinD(M2)
+      - 0.1143*sinD(2*F)
+      + 0.0588*sinD(2*D - 2*Mp)
+      + 0.0572*sinD(2*D - M2 - Mp)
+      + 0.0533*sinD(2*D + Mp)
+    );
+  }
+  const [L0, n, omega, e] = ELEMENTS[key];
+  const L = norm360(L0 + n*T);
+  const M = norm360(L - omega);
+  return norm360(L + eqCenter(M, e));
+}
+
+function calcAllPlanets(jd) {
+  const T = (jd - 2451545.0) / 36525;
+  const result = {};
+  for (const p of PLANET_LIST) {
+    result[p.key] = getPlanetLon(p.key, T);
+  }
+  return result;
+}
+
+function lonToSign(lon) {
+  const idx = Math.floor(lon / 30);
+  const deg = lon - idx * 30;
+  return { signIdx: idx, deg: deg };
+}
+
+function formatPos(lon) {
+  const { signIdx, deg } = lonToSign(lon);
+  const d = Math.floor(deg);
+  const m = Math.floor((deg - d) * 60);
+  return `${SIGN_SYMS[signIdx]}${SIGN_NAMES[signIdx]} ${d}°${m}'`;
+}
+
+function angleDiff(a, b) {
+  let diff = Math.abs((a - b + 360) % 360);
+  if (diff > 180) diff = 360 - diff;
+  return diff;
+}
+
+/* ===== アスペクト解説文データベース ===== */
+const DESCS = {
+  jupiter: {
+    sun:     { conj:'自己表現と目標が大きく広がる時期です。新しい機会が自然と舞い込みやすく、自信が充実してくる感覚があります。やりたいことを少し大きく描いてみましょう。', soft:'努力が実を結びやすく、周囲のサポートも得られやすい時期です。自分の可能性を少し広げてみるのに適しています。', hard:'拡大しすぎる傾向が出やすい時期です。自信過剰や無謀な判断に気をつけながら、チャンスを活かすとよいでしょう。' },
+    moon:    { conj:'感情が豊かになり、人との繋がりに喜びを感じやすい時期です。家族や親しい人との関係が温かく広がるタイミングでもあります。', soft:'感情的な安定感が高まり、日常の小さなことに満足を見つけやすい時期です。', hard:'感情が揺れやすく、過剰反応しがちな時期です。一歩引いて状況を見る余裕を意識しましょう。' },
+    mercury: { conj:'思考の幅が広がり、新しいアイデアや知識を吸収しやすい時期です。学びや情報発信に積極的になると恩恵が大きいです。', soft:'コミュニケーションがスムーズになり、交渉や説明が上手くいきやすい時期です。', hard:'情報過多になりがちで、細部を確認せずに判断を急ぎやすい時期です。重要な決定は慎重に。' },
+    venus:   { conj:'恋愛・対人関係・創造的な活動に喜びが増す時期です。人を惹きつける魅力も高まっています。', soft:'人間関係が豊かになり、楽しい交流の機会が増える時期です。', hard:'贅沢や過剰な楽しみに流れやすい時期です。楽しむことと節度のバランスを意識しましょう。' },
+    mars:    { conj:'行動力と意欲が高まる時期です。積極的に動いた分だけ成果につながりやすいエネルギーがあります。', soft:'努力に対する結果が出やすく、モチベーションを維持しやすい時期です。', hard:'衝動的な行動や焦りに注意が必要です。方向性を定めてから動くと無駄がありません。' },
+    jupiter: { conj:'楽観性と成長への意欲が一体化する、信念が強まる時期です。理想を高く掲げることで大きな流れを引き寄せます。', soft:'ビジョンと行動力がうまく噛み合う時期です。', hard:'過信と現実のギャップに気づきやすい時期です。謙虚さを忘れずに。' },
+    saturn:  { conj:'努力の積み重ねが報われやすい時期です。真剣に取り組んできたことに対して現実的な成果が得られます。', soft:'計画を着実に進めることで長期的な安定につながる時期です。', hard:'楽観と慎重さのバランスが課題になる時期です。焦らず着実に積み上げましょう。' },
+    uranus:  { conj:'予想外の変化や突然のチャンスが舞い込みやすい時期です。今まで試せなかったことへの挑戦の後押しがあります。', soft:'自由や創造性に関連した領域で幸運な展開が起きやすい時期です。', hard:'急激な変化への対応が求められます。無計画な冒険は避けましょう。' },
+    neptune: { conj:'直感や感受性が豊かになり、芸術的・精神的な活動に恵みがある時期です。理想が高まりますが、現実確認も忘れずに。', soft:'創造的なインスピレーションが湧きやすく、心の豊かさを感じられる時期です。', hard:'幻想に流されやすく、判断が甘くなりがちな時期です。重要な決定には慎重さが必要です。' },
+    pluto:   { conj:'深いところからの変容を促す強力なエネルギーが働く時期です。影響力や社会的な力に関して大きな動きが起きやすいです。', soft:'内面の変化が外の世界に良い形で現れやすい時期です。', hard:'権力や支配に関する摩擦が起きやすい時期です。自分のコントロールできる範囲に集中しましょう。' },
+  },
+  saturn: {
+    sun:     { conj:'自己のあり方を問われる、人生の節目となる時期です。責任や制限を感じながらも、それが長期的な成長の基盤を作っています。焦らず一歩一歩着実に進むことが大切です。', soft:'努力の積み重ねが実を結び始める、成熟のサインです。自分の限界と可能性を冷静に見極めながら進むと着実な前進が可能です。', hard:'自己表現や目標達成が阻まれているように感じる時期かもしれません。この制限は、本当に大切なものを見極めるための篩でもあります。' },
+    moon:    { conj:'感情が抑圧されたり、孤独感が強まりやすい時期です。感情的なニーズを満たすことが難しく感じられますが、この時期に感情の自立を学ぶことができます。', soft:'感情的な成熟が促され、感情に流されずに責任ある行動ができるようになる時期です。', hard:'感情的な抑圧や、親しい人との距離感に困難を感じやすい時期です。自分の感情ニーズと向き合うことで、長期的な関係の土台が固まります。' },
+    mercury: { conj:'思考や発言に慎重さが求められる時期です。表現が制限されるように感じますが、深く考えてから発言する習慣が身につく時期でもあります。', soft:'集中力と論理的思考力が高まる時期です。学習や文書作成など精度が求められる作業に向いています。', hard:'コミュニケーションで誤解が生じやすく、考えがまとまらない感覚を覚えるかもしれません。重要な交渉は時期を見計らいましょう。' },
+    venus:   { conj:'人間関係や恋愛に制限を感じやすい時期です。既存の関係が試され、本質的なつながりだけが残るような変化が起きることがあります。', soft:'安定した関係を築くことに向いた時期です。深い信頼と責任に基づいた絆を育むことができます。', hard:'恋愛や対人関係に重さや義務感を感じやすい時期です。自分の価値観と向き合い、何を大切にするかを見極める機会です。' },
+    mars:    { conj:'行動力が制限されたり、フラストレーションを感じやすい時期です。衝動的な行動は裏目に出やすいため、計画を立ててから動くことが重要です。', soft:'行動に粘り強さと持続力が加わる時期です。長期的なプロジェクトを地道に進めることで着実な成果が生まれます。', hard:'意欲と制限の葛藤を感じやすい時期です。怒りやフラストレーションは適切に発散し、エネルギーを建設的な方向に向けましょう。' },
+    jupiter: { conj:'楽観と現実の間でバランスを取ることを求められる時期です。成長と責任が同時に問われます。', soft:'理想を現実的な形で実現する力が高まる時期です。', hard:'過大な期待と実際の制限のギャップに直面しやすい時期です。' },
+    saturn:  { conj:'約29.5年に一度のサターンリターンです。これまでの生き方を見直し、本当に大切なものを選び直す時期です。重く感じますが、この時期を乗り越えることで人生の次の段階が開かれます。', soft:'努力の積み重ねが安定した基盤として機能し始める時期です。責任と自由のバランスが取れてきます。', hard:'今の生き方や構造を問い直す必要性を感じる時期です。古い制限を手放し、より自分らしい秩序を作り直す機会です。' },
+    uranus:  { conj:'安定を求める気持ちと変化への衝動が対立する時期です。急激な変化には慎重に対応しつつ、必要な改革は着実に進めることが求められます。', soft:'革新を安定した方法で実現できる時期です。', hard:'変化への抵抗と変化の必要性の間で葛藤が生じやすい時期です。' },
+    neptune: { conj:'現実と理想の間でジレンマを感じやすい時期です。夢を現実的な形で実現するための基盤を作ることが課題になります。', soft:'夢や理想を現実化するための努力が実りやすい時期です。', hard:'夢や理想が現実の壁にぶつかりやすい時期です。できることとできないことを冷静に見極めましょう。' },
+    pluto:   { conj:'権力構造や生き方の根本に関わる深い変容が求められる時期です。強制的な状況の変化を通じて、本当の意味での強さを身につける機会です。', soft:'深い変容を着実な方法で進められる時期です。', hard:'コントロールへの執着と手放しの間で葛藤が生じやすい時期です。変化を受け入れることで新しい力が解放されます。' },
+  },
+  uranus: {
+    sun:     { conj:'突然の変化や予想外の出来事が続く時期です。今まで自分を縛っていた制限や役割から自由になる衝動が高まります。変化は混乱を伴いますが、より本質的な自己へ向かうプロセスでもあります。', soft:'自由や独自性を発揮しやすい時期です。枠にとらわれない発想が評価され、自分らしい生き方が広がります。', hard:'突然の変化や反乱衝動が高まる時期です。柔軟に対応しながら、自分の芯は守ることが大切です。' },
+    moon:    { conj:'感情のパターンが突然変化したり、日常生活に急激な変化が起きやすい時期です。感情的な独立心が高まり、今まで当たり前だった環境に疑問を感じることがあります。', soft:'感情の自由を表現しやすい時期です。直感が鋭くなり、新しい感情のパターンを心地よく受け入れることができます。', hard:'感情の急激な揺れや、家庭・居場所に関する突然の変化が起きやすい時期です。変化を通じて、本当の安心の意味を問い直す機会です。' },
+    mercury: { conj:'思考のパターンが大きく変わる時期です。突然のひらめきや、これまでと全く異なる視点が浮かびやすいです。既存の考え方を打ち破るアイデアが生まれるタイミングです。', soft:'独創的な思考とコミュニケーションが活発になる時期です。革新的なアイデアが自然と湧き出てきます。', hard:'思考が散乱したり、言動が不安定になりやすい時期です。重要な決定は気持ちが落ち着いてから行いましょう。' },
+    venus:   { conj:'恋愛観や価値観が急激に変化する時期です。突然の出会いや、今まで感じたことのない感情の動きがあるかもしれません。自由と愛情の折り合いをつけることが課題になります。', soft:'自由で新鮮な形の愛情表現ができる時期です。既存の関係に新鮮さを取り入れたり、ユニークな美的感覚が花開きます。', hard:'関係性に突然の変化が起きやすい時期です。自由を求める気持ちと絆を求める気持ちの間で揺れることがあります。' },
+    mars:    { conj:'衝動的な行動や、予期せぬ方向へのエネルギーの爆発が起きやすい時期です。今まで抑えていた欲求や怒りが突然表面化することがあります。', soft:'独創的な行動力が高まる時期です。新しい方法で物事を進める勢いがあります。', hard:'衝動的な行動でトラブルを招きやすい時期です。直感的な決断には一呼吸おくことが大切です。' },
+    jupiter: { conj:'今まで自分を縛っていた信念や世界観が解放される時期です。大きな自由を感じると同時に、拠り所を失う感覚もあるかもしれません。', soft:'変化を積極的に取り込み、自由に成長できる時期です。', hard:'急激な変化と楽観的な期待がぶつかり、現実との乖離を感じやすい時期です。' },
+    saturn:  { conj:'今まで自分を縛っていた構造や制限が崩れ始める時期です。変化への抵抗と自由への衝動が葛藤しますが、必要な革新が起きています。', soft:'変化を着実に取り込むことができる時期です。古い構造を徐々に更新し、より自分らしい秩序を作ることができます。', hard:'安定を維持しようとする力と変化の力が激しくぶつかる時期です。崩してはいけないものは守りましょう。' },
+    uranus:  { conj:'人生の約42歳頃に訪れる天王星回帰です。人生の前半を振り返り、本当に自分らしい生き方を問い直す時期です。周囲の期待に応えてきた部分を手放し、自分固有の使命に気づく機会です。', soft:'自由への欲求と社会との折り合いが取れてきます。変化を柔軟に受け入れられる時期です。', hard:'自分らしさと社会的役割の間の葛藤が表面化する時期です。' },
+    neptune: { conj:'精神的・感覚的な変革が起きやすい時期です。直感が高まり、現実の見え方が変わることがあります。', soft:'直感と革新がうまく融合する時期です。精神的な洞察が行動を変えるきっかけになります。', hard:'現実と幻想の区別が難しくなる時期です。地に足をつけた判断を心がけましょう。' },
+    pluto:   { conj:'個人の深い構造が根本から変わるような、大きな変革エネルギーが働いています。', soft:'深い変容が自由な形で展開する時期です。変化への恐怖が薄れ、変革を楽しむことができます。', hard:'制御できない変化に直面しやすい時期です。抗うよりも変化の流れに乗ることで活路が開けます。' },
+  },
+  neptune: {
+    sun:     { conj:'自己アイデンティティがぼんやりし、方向性が定まらない感覚を覚えることがあります。しかしこの霧のような時期は、より深い自己との出会いへの入口でもあります。直感を信じながらゆっくり進みましょう。', soft:'直感やインスピレーションが豊かになる時期です。芸術や精神的な活動を通じて、自己の深みにアクセスしやすいです。', hard:'目標や自己像が曖昧になりやすい時期です。他者に流されないよう、自分の価値観のアンカーを意識的に保つことが大切です。' },
+    moon:    { conj:'感受性が極めて繊細になり、他者の感情を自分のもののように感じてしまうことがあります。感情的な境界線を意識し、自他の感情を区別することが重要な時期です。', soft:'共感力や直感が高まり、人の気持ちを深く理解できる時期です。芸術的な感受性も豊かになります。', hard:'感情の混乱や、依存・共依存関係のパターンが浮上しやすい時期です。自分の感情をしっかり認識することが助けになります。' },
+    mercury: { conj:'思考が霧がかったようにぼんやりしたり、空想に流れやすい時期です。ただし詩的な発想や直感的な洞察は豊かで、創作活動には向いています。重要な契約や実務的な決定は後回しにしましょう。', soft:'直感的な思考とクリエイティブな発想力が高まる時期です。', hard:'情報の混乱や誤解が起きやすい時期です。重要な情報は必ず確認を取りましょう。' },
+    venus:   { conj:'愛情や美に対する理想が高まり、ロマンティックな感受性が豊かになる時期です。ただし相手を理想化しすぎてしまうリスクもあります。現実の相手をしっかり見ることが大切です。', soft:'愛情が深まり、芸術的な感受性も高まる時期です。無条件の愛を体験する機会があります。', hard:'恋愛や人間関係で幻滅を経験しやすい時期です。相手への理想と現実のギャップを直視することが関係の成熟につながります。' },
+    mars:    { conj:'行動力や意欲が霞んでしまうような感覚を覚えることがあります。目標が見えにくく動きにくい時期ですが、内面の充電期間として捉えると良いでしょう。', soft:'直感に従って行動することで良い結果が得られる時期です。芸術や癒しに関わる活動でエネルギーが活きます。', hard:'行動の方向性が定まらず、エネルギーが分散しやすい時期です。目標を明確にすることに力を注ぎましょう。' },
+    jupiter: { conj:'理想と信念が一体化する、スピリチュアルな開放感を感じやすい時期です。ただし現実判断が甘くなりがちです。', soft:'理想が自然な形で広がり、精神的な充実を感じやすい時期です。', hard:'夢と現実のギャップに幻滅しやすい時期です。大きな投資や決断には慎重に。' },
+    saturn:  { conj:'現実と理想の間で大きな葛藤を感じる時期です。積み上げてきたものが揺らぐような感覚を覚えることがありますが、本質的に価値あるものと幻想を区別するプロセスでもあります。', soft:'現実的な努力と精神的な感受性が調和する時期です。夢を具体的な形に落とし込む力があります。', hard:'今まで信じてきた構造や制度に対して疑問を感じやすい時期です。基盤の見直しに向き合う勇気が求められます。' },
+    uranus:  { conj:'精神的な変革と自由への欲求が融合する時期です。今まで見えていなかった視点が突然開けることがあります。', soft:'直感と革新が融合し、精神的な洞察が行動を変えます。', hard:'精神的な混乱の中から変革のヒントが生まれる時期です。' },
+    neptune: { conj:'海王星スクエア（40代前半頃）など、精神的な理想と現実の乖離に気づき、幻想を手放す過程にあります。より深い精神的成熟へと向かっています。', soft:'精神的な感受性が自然な形で深まり、自己の幻想と向き合う力が育ちます。', hard:'精神的な混乱が頂点を迎える時期です。地に足のついた視点を保つことが大切です。' },
+    pluto:   { conj:'精神的・集合的な変容が深く起きている時期です。意識の深い層が書き換えられるような体験をすることがあります。', soft:'深い変容を精神的な豊かさとして受け入れることができます。', hard:'精神的な危機と深い変容が同時に起きやすい時期です。' },
+  },
+  pluto: {
+    sun:     { conj:'自己の根本が変容を迫られる、人生でも特に深い時期です。今まで「自分らしさ」だと思っていたものが問い直されます。この変容は苦しいですが、より本質的な自己へ向かうプロセスです。', soft:'内面の深い力が外の行動に自然に現れる時期です。変容のエネルギーを建設的に使うことができます。', hard:'権力や支配に関するテーマが浮上しやすく、自己変容を求められる時期です。コントロールへの執着を手放すことで新しい力が解放されます。' },
+    moon:    { conj:'感情の深層にある無意識のパターンが表面化する時期です。過去の傷や幼少期の感情的な記憶が浮上することがあります。これは癒しのプロセスとして受け取ることができます。', soft:'感情的な変容が自然な形で進む時期です。過去のパターンを手放し、感情的な成熟が深まります。', hard:'深い感情的な混乱や、関係性における支配・依存のテーマが浮上しやすい時期です。感情のパターンの根源に向き合うことが求められます。' },
+    mercury: { conj:'思考が深層へと向かい、物事の本質を見たくなる時期です。執着した思考パターンが浮上したり、コミュニケーションで権力のテーマが現れることがあります。', soft:'深い洞察力と調査力が高まる時期です。物事の本質を見抜く力が強まります。', hard:'強迫的な思考や、コミュニケーションでの摩擦が起きやすい時期です。考えすぎず一つ一つ丁寧に向き合いましょう。' },
+    venus:   { conj:'愛情と執着のテーマが深く浮上する時期です。恋愛や人間関係において、コントロールや依存のパターンが明らかになります。関係の変容を恐れずに受け入れることが、より深い愛につながります。', soft:'愛情の深い変容が自然に進む時期です。本質的な繋がりが強化され、関係がより深まります。', hard:'執着や嫉妬、支配的な感情が浮上しやすい時期です。感情の根源にある恐れと向き合うことが関係の成熟につながります。' },
+    mars:    { conj:'権力や支配に関わる強烈なエネルギーが高まる時期です。抑圧していた怒りや欲求が爆発的に表れることがあります。このエネルギーを破壊ではなく変容のために使うことが大切です。', soft:'深い目的意識が行動力と結びつく時期です。強いエネルギーを集中させて大きな変革を成し遂げることができます。', hard:'衝突や権力争いが起きやすい時期です。攻撃性が高まりますが、それは深い恐れの裏返しでもあります。' },
+    jupiter: { conj:'成長のエネルギーと変容のエネルギーが同時に働き、大きな転換点となる可能性があります。', soft:'深い変容が成長と一体化する時期です。内面の強さが外の世界に現れます。', hard:'急激な拡大と深い変容が同時に迫り、対応が難しく感じられる時期です。' },
+    saturn:  { conj:'今まで依存してきた構造や制度が根本から変わる時期です。権力や社会システムに対する深い変容が個人の生き方にも影響します。', soft:'深い変容を着実に進められる時期です。力と責任が融合し、持続可能な変革が可能です。', hard:'支配と制限のテーマが衝突する時期です。古い権威や制度との摩擦を通じて新しい構造が生まれます。' },
+    uranus:  { conj:'個人の深い構造が根本から変わるような大きな変革エネルギーが働いています。今までの枠組みが一気に塗り替わる可能性があります。', soft:'変革と変容がスムーズに連動する時期です。', hard:'突然の変化と深い変容が同時に迫ってくる時期です。' },
+    neptune: { conj:'幻想と現実の深層で変容が起きている時期です。今まで信じていた精神的な理想が問い直されることがあります。', soft:'深い変容が精神的な豊かさとして現れる時期です。', hard:'幻想と現実の葛藤が深い変容を促す時期です。' },
+    pluto:   { conj:'冥王星スクエア（60代頃）など、人生後半の変容テーマと向き合う時期です。今まで積み上げてきた権力や執着を手放し、より本質的な生き方へ移行するプロセスにあります。', soft:'深い変容の流れに自然に乗ることができる時期です。', hard:'コントロールできない力に直面しやすい時期です。手放すことで、新しい段階が開かれます。' },
+  },
+  /* 速い惑星は共通の簡易テキスト */
+  sun:     { _fast: true },
+  moon:    { _fast: true },
+  mercury: { _fast: true },
+  venus:   { _fast: true },
+  mars:    { _fast: true },
+};
+
+function getFastDesc(transitKey, natalKey, type) {
+  const tLabel = PLANET_LIST.find(p=>p.key===transitKey).label;
+  const nLabel = PLANET_LIST.find(p=>p.key===natalKey).label;
+  const aspectLabel = type === 'conj' ? '合' : type === 'soft' ? 'ソフトアスペクト' : 'ハードアスペクト';
+  const flavor = {
+    conj: 'エネルギーが一点に集中し、テーマが強調される時期です。',
+    soft: '流れがスムーズで、テーマを活かしやすい時期です。',
+    hard: '緊張やチャレンジを通じて成長のきっかけが生まれる時期です。',
+  };
+  return `現在、あなたのネイタル${nLabel}に対してトランジット${tLabel}が${aspectLabel}を形成しています。${flavor[type]}数日〜数週間のサイクルで変化する短期トランジットです。`;
+}
+
+/* ===== メイン計算 ===== */
+function diagnose() {
+  const dateVal = document.getElementById('birthdate').value;
+  if (!dateVal) { alert('生年月日を入力してください'); return; }
+  const timeVal = document.getElementById('birthtime').value || '12:00';
+  const tzVal   = parseFloat(document.getElementById('timezone').value);
+
+  const [by, bm, bd] = dateVal.split('-').map(Number);
+  const [bh, bmin]   = timeVal.split(':').map(Number);
+  const birthHourUT  = (bh + bmin/60) - tzVal;
+  const birthJD = julianDay(by, bm, bd, birthHourUT);
+
+  /* 現在日時（UTC） */
+  const now = new Date();
+  const nowJD = julianDay(
+    now.getUTCFullYear(), now.getUTCMonth()+1, now.getUTCDate(),
+    now.getUTCHours() + now.getUTCMinutes()/60
+  );
+
+  const natal   = calcAllPlanets(birthJD);
+  const transit = calcAllPlanets(nowJD);
+
+  /* グリッド表示 */
+  renderGrid('natal-grid',   natal);
+  renderGrid('transit-grid', transit);
+
+  /* アスペクト計算 */
+  const slowAspects = [];
+  const fastAspects = [];
+  const slowKeys = ['jupiter','saturn','uranus','neptune','pluto'];
+  const fastKeys = ['sun','moon','mercury','venus','mars'];
+
+  for (const tk of [...slowKeys, ...fastKeys]) {
+    const isFast = fastKeys.includes(tk);
+    for (const nk of PLANET_LIST.map(p=>p.key)) {
+      const diff = angleDiff(transit[tk], natal[nk]);
+      for (const asp of ASPECTS) {
+        const orb = Math.abs(diff - asp.angle);
+        if (orb <= asp.orb) {
+          const item = { tk, nk, asp, orb, isFast };
+          if (isFast) fastAspects.push(item);
+          else        slowAspects.push(item);
+          break; // 1組み合わせに1アスペクト
+        }
+      }
+    }
+  }
+
+  slowAspects.sort((a,b) => a.orb - b.orb);
+  fastAspects.sort((a,b) => a.orb - b.orb);
+
+  renderAspects('slow-aspects', slowAspects, false);
+  renderAspects('fast-aspects', fastAspects, true);
+
+  const result = document.getElementById('result');
+  result.style.display = 'block';
+  result.scrollIntoView({ behavior:'smooth' });
+}
+
+function renderGrid(id, positions) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  for (const p of PLANET_LIST) {
+    const div = document.createElement('div');
+    div.className = 'planet-cell';
+    const { signIdx, deg } = lonToSign(positions[p.key]);
+    const d = Math.floor(deg);
+    div.innerHTML = `<div class="planet-cell-name">${p.sym} ${p.label}</div><div class="planet-cell-pos"><span class="sym">${SIGN_SYMS[signIdx]}</span>${SIGN_NAMES[signIdx]} ${d}°</div>`;
+    el.appendChild(div);
+  }
+}
+
+function renderAspects(id, items, isFast) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  if (items.length === 0) {
+    const msg = isFast
+      ? '現在、短期トランジットのアスペクトはありません。'
+      : '現在、主要な長期トランジットはありません。木星・土星・天王星・海王星・冥王星のアスペクトを確認しています。';
+    el.innerHTML = `<div class="no-result">${msg}</div>`;
+    return;
+  }
+  for (const item of items) {
+    const { tk, nk, asp, orb, isFast: fast } = item;
+    const tPlanet = PLANET_LIST.find(p=>p.key===tk);
+    const nPlanet = PLANET_LIST.find(p=>p.key===nk);
+    const type = asp.type;
+
+    let desc;
+    if (fast) {
+      desc = getFastDesc(tk, nk, type);
+    } else {
+      const pDescs = DESCS[tk];
+      if (pDescs && pDescs[nk] && pDescs[nk][type]) {
+        desc = pDescs[nk][type];
+      } else {
+        desc = getFastDesc(tk, nk, type);
+      }
+    }
+
+    const orbStr = `オーブ ${orb.toFixed(1)}°`;
+    const badgeClass = `badge-${type}`;
+    const badgeLabel = type === 'conj' ? '合' : type === 'soft' ? (asp.angle === 60 ? 'セクスタイル' : 'トライン') : (asp.angle === 90 ? 'スクエア' : 'オポジション');
+
+    /* カードのクラス決定 */
+    let cardClass = fast ? `transit-card fast-${type}` : `transit-card slow-${type}`;
+    if (!fast && type === 'conj') {
+      cardClass += ` ${tk}`;
+    }
+
+    const card = document.createElement('div');
+    card.className = cardClass;
+    card.innerHTML = `
+      <div class="tc-head">
+        <span class="tc-planets">${tPlanet.sym}${tPlanet.label} → ${nPlanet.sym}${nPlanet.label}</span>
+        <span class="badge ${badgeClass}">${badgeLabel}</span>
+        <span class="tc-orb">${orbStr}</span>
+      </div>
+      <div class="tc-desc">${desc}</div>
+    `;
+    el.appendChild(card);
+  }
+}
+</script>
+</body>
+</html>
